@@ -1,12 +1,19 @@
 <template>
   <div class="page">
+    <!-- Background Clouds -->
+    <div class="clouds">
+      <div class="cloud cloud1"></div>
+      <div class="cloud cloud2"></div>
+      <div class="cloud cloud3"></div>
+    </div>
+
     <!-- Top Banner -->
     <div class="banner">
       <div class="banner-left">My Portfolio</div>
       <div class="banner-right">
-        <NuxtLink to="/experience"><button>Experience</button></NuxtLink>
-        <NuxtLink to="/education"><button>Education</button></NuxtLink>
-        <NuxtLink to="/skills"><button>Skills</button></NuxtLink>
+        <NuxtLink to="/experience"><button class="nav-btn">Experience</button></NuxtLink>
+        <NuxtLink to="/education"><button class="nav-btn">Education</button></NuxtLink>
+        <NuxtLink to="/skills"><button class="nav-btn">Skills</button></NuxtLink>
       </div>
     </div>
 
@@ -16,11 +23,15 @@
       <div class="description">
         <h1>Hi, I am Helen Chan</h1>
         <p class="caption">You can generate any caption here</p>
+        <button @click="showFunFact" class="fun-btn">Discover a Fun Fact!</button>
+        <transition name="fade">
+          <p v-if="currentFact" class="fun-fact">{{ currentFact }}</p>
+        </transition>
       </div>
 
       <!-- Right Icon -->
       <div class="icon">
-        https://via.placeholder.com/120
+        <img src="https://via.placeholder.com/120" alt="Profile Icon">
       </div>
     </div>
 
@@ -45,7 +56,21 @@
 </template>
 
 <script setup>
-// No script logic needed
+import { ref } from 'vue'
+
+// Fun facts array (customize these with your own facts)
+const funFacts = [
+  "Helen once coded for 24 hours straight!",
+  "Helen loves solving complex algorithms.",
+  "Helen is passionate about web development."
+]
+const currentFact = ref('')
+
+// Function to show a random fun fact
+const showFunFact = () => {
+  const randomIndex = Math.floor(Math.random() * funFacts.length)
+  currentFact.value = funFacts[randomIndex]
+}
 </script>
 
 <style lang="scss" scoped>
@@ -55,6 +80,59 @@
   padding: 0;
   min-height: 100vh;
   position: relative;
+  overflow: hidden; // To contain clouds within the page
+}
+
+// Clouds Background
+.clouds {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.cloud {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.7;
+  animation: drift linear infinite;
+}
+
+.cloud1 {
+  width: 100px;
+  height: 60px;
+  top: 10%;
+  left: -100px;
+  animation-duration: 20s;
+}
+
+.cloud2 {
+  width: 150px;
+  height: 90px;
+  top: 30%;
+  left: -150px;
+  animation-duration: 25s;
+}
+
+.cloud3 {
+  width: 80px;
+  height: 50px;
+  top: 50%;
+  left: -80px;
+  animation-duration: 30s;
+}
+
+@keyframes drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100vw);
+  }
 }
 
 // Banner
@@ -66,6 +144,8 @@
   align-items: center;
   padding: 0 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
 
   .banner-left {
     font-weight: bold;
@@ -75,19 +155,21 @@
   .banner-right {
     display: flex;
     gap: 10px;
+  }
+}
 
-    button {
-      background-color: rgba(0, 0, 0, 0.1);
-      border: none;
-      padding: 6px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+// Navigation Buttons
+.nav-btn {
+  background-color: rgba(0, 0, 0, 0.1);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.2);
-      }
-    }
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
   }
 }
 
@@ -97,6 +179,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 40px 20px;
+  position: relative;
+  z-index: 1;
 
   .description {
     flex: 1;
@@ -109,6 +193,27 @@
     .caption {
       font-size: 0.85rem;
       color: #333;
+    }
+
+    .fun-btn {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+
+    .fun-fact {
+      margin-top: 10px;
+      font-style: italic;
+      color: #555;
     }
   }
 
@@ -126,6 +231,8 @@
 // Experience Section
 .experience {
   padding: 20px;
+  position: relative;
+  z-index: 1;
 
   h2 {
     color: #2c3e50;
@@ -162,5 +269,14 @@
   gap: 20px;
   font-size: 0.9rem;
   color: #fff;
+  z-index: 1;
+}
+
+// Fade Transition for Fun Fact
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>

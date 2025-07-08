@@ -9,7 +9,7 @@
 
     <!-- Top Banner -->
     <div class="banner">
-      <div class="banner-left">Skills</div>
+      <div class="banner-left">About Me</div>
       <div class="banner-right">
         <button @click="toggleTheme" class="theme-btn">
           {{ isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode' }}
@@ -18,46 +18,48 @@
       </div>
     </div>
 
-    <!-- Skills Content -->
+    <!-- About Content -->
     <div class="max-w-3xl mx-auto space-y-6 px-6 py-12">
+      <!-- Introduction Card -->
+      <div class="card bg-white shadow-lg rounded-lg overflow-hidden relative">
+        <div class="timeline-dot"></div>
+        <div class="p-6">
+          <h2 class="text-2xl font-bold text-gray-800">Who I Am</h2>
+          <h1 class="text-xl mt-2">
+            <span class="typing">{{ typedText }}</span>
+            <span class="cursor">|</span>
+          </h1>
+          <transition name="fade">
+            <p v-if="showQuote" class="quote mt-4 text-gray-600 italic">
+              "Code is my canvas, and I'm painting my future one line at a time."
+            </p>
+          </transition>
+        </div>
+      </div>
+
+      <!-- Purpose Card -->
+      <div class="card bg-white shadow-lg rounded-lg overflow-hidden relative">
+        <div class="timeline-dot"></div>
+        <div class="p-6">
+          <h2 class="text-2xl font-bold text-gray-800">Why This Portfolio</h2>
+          <p class="text-gray-800 mt-2">
+            I created this portfolio to showcase my skills, experiences, and passion for web development. It's a space where I can share my journey, from learning to code to building real-world projects, and connect with others who share my enthusiasm for technology. This website is a reflection of my growth and a platform to inspire and collaborate with the tech community.
+          </p>
+          <button @click="celebratePurpose" class="highlight-btn mt-4">Celebrate My Journey!</button>
+        </div>
+      </div>
+
+      <!-- Timeline for Milestones -->
       <div class="timeline">
-        <div v-for="(skill, index) in skills" :key="index" class="card bg-white shadow-lg rounded-lg overflow-hidden relative">
-          <!-- Timeline Dot -->
+        <div v-for="(milestone, index) in milestones" :key="index" class="card bg-white shadow-lg rounded-lg overflow-hidden relative">
           <div class="timeline-dot"></div>
-          <div
-            :class="{ 'flipped': flippedIndex === index }"
-            class="card-inner"
-            @click="toggleFlip(index)"
-          >
-            <!-- Front of Card -->
-            <div class="card-front bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 flex items-center justify-between">
-              <div class="flex items-center">
-                <svg
-                  class="w-4 h-4 mr-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <h3 class="text-xl font-semibold">{{ skill.name }}</h3>
-              </div>
-            </div>
-            <!-- Back of Card -->
-            <div class="card-back bg-gray-50 p-6">
-              <p class="text-gray-800">{{ skill.description }}</p>
-              <div class="progress-bar mt-4">
-                <span class="text-sm text-gray-600">Proficiency: {{ skill.proficiency }}%</span>
-                <div class="progress-container">
-                  <div :style="{ width: `${skill.proficiency}%` }" class="progress"></div>
-                </div>
-              </div>
-            </div>
+          <div class="p-6">
+            <h3 class="text-xl font-semibold text-gray-800">{{ milestone.title }}</h3>
+            <p class="text-sm text-gray-600">{{ milestone.year }}</p>
+            <p class="text-gray-800 mt-2">{{ milestone.description }}</p>
           </div>
         </div>
       </div>
-      <button @click="highlightSkill" class="highlight-btn mt-4">Highlight a Skill!</button>
     </div>
 
     <!-- Confetti Canvas -->
@@ -66,7 +68,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import confetti from 'canvas-confetti'
 
 // Theme Toggle
@@ -76,36 +78,29 @@ const toggleTheme = () => {
   document.documentElement.classList.toggle('dark', isDarkMode.value)
 }
 
-// Skills data
-const skills = ref([
-  {
-    name: 'JavaScript',
-    description: 'Proficient in building dynamic web applications with modern JavaScript.',
-    proficiency: 80
-  },
-  {
-    name: 'Vue.js',
-    description: 'Experienced in creating reactive and component-based UIs with Vue.js.',
-    proficiency: 75
-  },
-  {
-    name: 'CSS',
-    description: 'Skilled in designing responsive and visually appealing layouts.',
-    proficiency: 85
-  }
-])
+// Typing Animation
+const fullText = 'Hi, I am Helen Chan, a passionate web developer!'
+const typedText = ref('')
+const typingSpeed = 100
+const showQuote = ref(false)
+let index = 0
 
-// Track which skill card is flipped
-const flippedIndex = ref(null)
-const toggleFlip = (index) => {
-  flippedIndex.value = flippedIndex.value === index ? null : index
+const type = () => {
+  if (index < fullText.length) {
+    typedText.value += fullText.charAt(index)
+    index++
+    setTimeout(type, typingSpeed)
+  } else {
+    showQuote.value = true
+  }
 }
 
-// Highlight a random skill with confetti
-const highlightedSkill = ref('')
-const highlightSkill = () => {
-  const randomIndex = Math.floor(Math.random() * skills.value.length)
-  highlightedSkill.value = skills.value[randomIndex].name
+onMounted(() => {
+  type()
+})
+
+// Celebrate Purpose
+const celebratePurpose = () => {
   confetti({
     particleCount: 100,
     spread: 70,
@@ -113,6 +108,25 @@ const highlightSkill = () => {
     colors: ['#007bff', '#00ddeb', '#ffd700']
   })
 }
+
+// Milestones data
+const milestones = ref([
+  {
+    title: 'Started Coding Journey',
+    year: '2015',
+    description: 'Began learning HTML and CSS, sparking a love for web development.'
+  },
+  {
+    title: 'First Web Project',
+    year: '2017',
+    description: 'Built my first personal website, experimenting with JavaScript.'
+  },
+  {
+    title: 'Joined Tech Community',
+    year: '2020',
+    description: 'Became an active member of local tech meetups and online forums.'
+  }
+])
 </script>
 
 <style lang="scss" scoped>
@@ -135,21 +149,16 @@ const highlightSkill = () => {
     .card {
       background-color: #34495e;
 
-      .card-back {
-        background-color: #3b4a5e;
-        color: #fff;
-
-        .text-gray-600 {
-          color: #ccc;
-        }
-
-        .text-gray-800 {
-          color: #fff;
-        }
+      .text-gray-600 {
+        color: #ccc;
       }
 
-      .progress {
-        background-color: #4a90e2;
+      .text-gray-800 {
+        color: #fff;
+      }
+
+      .quote {
+        color: #ccc;
       }
     }
   }
@@ -306,7 +315,7 @@ const highlightSkill = () => {
   100% { transform: scale(1); opacity: 1; }
 }
 
-// Skill Cards
+// Cards
 .card {
   transition: box-shadow 0.3s ease;
   margin-left: 20px;
@@ -314,55 +323,33 @@ const highlightSkill = () => {
   &:hover {
     box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
   }
-}
 
-.card-inner {
-  position: relative;
-  width: 100%;
-  height: 100px; // Fixed height for consistent flipping
-  transform-style: preserve-3d;
-  transition: transform 0.6s ease;
-  cursor: pointer;
+  .typing {
+    display: inline-block;
+  }
 
-  &.flipped {
-    transform: rotateY(180deg);
+  .cursor {
+    display: inline-block;
+    animation: blink 0.7s infinite;
+  }
+
+  .quote {
+    transition: opacity 0.5s ease;
   }
 }
 
-.card-front,
-.card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  border-radius: 8px;
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
-.card-front {
-  display: flex;
-  align-items: center;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
 }
-
-.card-back {
-  transform: rotateY(180deg);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.progress-container {
-  width: 100%;
-  height: 8px;
-  background: #e0e0e0;
-  border-radius: 4px;
-  margin-top: 4px;
-  overflow: hidden;
-}
-
-.progress {
-  height: 100%;
-  background: #007bff;
-  transition: width 0.5s ease;
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
 .highlight-btn {

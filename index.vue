@@ -1,716 +1,602 @@
 <template>
-  <div :class="['page', { 'dark-mode': isDarkMode }]">
-    <!-- Background Clouds -->
-    <div class="clouds">
-      <div class="cloud cloud1"></div>
-      <div class="cloud cloud2"></div>
-      <div class="cloud cloud3"></div>
-    </div>
-
-    <!-- Top Banner -->
-    <div class="banner">
-      <div class="banner-left">My Portfolio</div>
-      <div class="banner-right">
-        <NuxtLink to="/about"><button class="nav-btn">About</button></NuxtLink>
-        <NuxtLink to="/experience"><button class="nav-btn">Experience</button></NuxtLink>
-        <NuxtLink to="/education"><button class="nav-btn">Education</button></NuxtLink>
-        <NuxtLink to="/skills"><button class="nav-btn">Skills</button></NuxtLink>
-        <button @click="toggleTheme" class="theme-btn">
-          {{ isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode' }}
+  <div :class="['container-fluid', { 'bg-dark': isDarkMode, 'bg-light': !isDarkMode }]">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary bg-gradient shadow-sm">
+      <div class="container">
+        <NuxtLink to="/" class="navbar-brand text-white fw-bold">
+          <span class="code-icon">⚡</span> Helen Chan
+        </NuxtLink>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
         </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><NuxtLink to="#home" class="nav-link" :class="{ 'text-white': isDarkMode, 'text-dark': !isDarkMode }" @click="scrollToSection('home')">Home</NuxtLink></li>
+            <li class="nav-item"><NuxtLink to="/about" class="nav-link" :class="{ 'text-white': isDarkMode, 'text-dark': !isDarkMode }">About</NuxtLink></li>
+            <li class="nav-item"><NuxtLink to="/education" class="nav-link" :class="{ 'text-white': isDarkMode, 'text-dark': !isDarkMode }">Education</NuxtLink></li>
+            <li class="nav-item"><NuxtLink to="/experience" class="nav-link" :class="{ 'text-white': isDarkMode, 'text-dark': !isDarkMode }">Experience</NuxtLink></li>
+            <li class="nav-item"><NuxtLink to="/skills" class="nav-link" :class="{ 'text-white': isDarkMode, 'text-dark': !isDarkMode }">Skills</NuxtLink></li>
+            <li class="nav-item"><NuxtLink to="#projects" class="nav-link" :class="{ 'text-white': isDarkMode, 'text-dark': !isDarkMode }" @click="scrollToSection('projects')">Projects</NuxtLink></li>
+            <li class="nav-item"><NuxtLink to="#contact" class="nav-link" :class="{ 'text-white': isDarkMode, 'text-dark': !isDarkMode }" @click="scrollToSection('contact')">Contact</NuxtLink></li>
+            <li class="nav-item">
+              <button class="btn btn-outline-light btn-sm ms-2" @click="toggleTheme">
+                <span>{{ isDarkMode ? '☀️' : '🌙' }}</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+   <section id="home" class="py-5 d-flex align-items-center min-vh-100">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 animate__animated animate__fadeInLeft">
+          <h1 class="display-3 fw-bold text-white">{{ typedText }}<span class="typing-cursor">|</span></h1>
+          <p class="lead" :class="{ 'text-white': isDarkMode, 'text-white-75': !isDarkMode }">{{ currentSubtitle }}</p>
+          <div class="d-flex flex-wrap gap-3 mb-4">
+            <button class="btn btn-primary" @click="showFunFact">💡 Fun Fact</button>
+            <button class="btn btn-primary" @click="changeSubtitle">🔄 New Tagline</button>
+          </div>
+          <div class="d-flex flex-wrap gap-3">
+            <button class="btn btn-outline-light btn-lg" @click="scrollToSection('projects')">📁 View My Work</button>
+            <button class="btn btn-outline-light btn-lg" @click="scrollToSection('contact')">✉️ Get In Touch</button>
+            <a href="/path/to/resume.pdf" download class="btn btn-outline-light btn-lg">📄 Download Resume</a>
+          </div>
+        </div>
+        <div class="col-lg-6 text-center animate__animated animate__fadeInRight">
+          <img src="/static/helen.jpg" alt="Helen Chan" class="rounded-circle img-fluid shadow" style="max-width: 300px;" />
+        </div>
       </div>
     </div>
+  </section>
 
-    <!-- Main Content -->
-    <div class="main-content">
-      <!-- Left Description Card -->
-      <div class="card description">
-        <h1>
-          <span class="typing">{{ typedText }}</span>
-          <span class="cursor">|</span>
-        </h1>
-        <p class="caption">{{ currentCaption }}</p>
-        <div class="button-group">
-          <button @click="showFunFact" class="fun-btn">Discover a Fun Fact!</button>
-          <button @click="changeCaption" class="caption-btn">New Tagline</button>
-        </div>
-        <transition name="fade">
-          <p v-if="currentFact" class="fun-fact">{{ currentFact }}</p>
-        </transition>
-        <!-- Skill Carousel -->
-        <div class="skill-carousel" @mouseenter="pauseCarousel" @mouseleave="resumeCarousel">
-          <transition name="slide">
-            <div v-if="currentSkill" class="skill-card">
-              <h3 class="skill-title">{{ currentSkill.name }}</h3>
-              <p class="skill-description">{{ currentSkill.description }}</p>
-              <div class="progress-bar">
-                <span class="text-sm text-gray-600">Proficiency: {{ currentSkill.proficiency }}%</span>
-                <div class="progress-container">
-                  <div :style="{ width: `${currentSkill.proficiency}%` }" class="progress"></div>
+    <!-- About Section -->
+    <section id="about" class="py-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+            <div :class="['card shadow', isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark']">
+              <div class="card-body p-5">
+                <h2 class="text-center mb-4 fw-bold">👤 About Me</h2>
+                <p class="lead text-center mb-4">Passionate web developer with a love for creating beautiful, functional, and user-friendly digital experiences.</p>
+                <div class="row">
+                  <div class="col-md-6">
+                    <h5 class="fw-bold">❤️ What I Love</h5>
+                    <ul class="list-unstyled">
+                      <li>💻 Clean, efficient code</li>
+                      <li>🎨 Modern UI/UX design</li>
+                      <li>📱 Responsive development</li>
+                      <li>🚀 Performance optimization</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h5 class="fw-bold">🏆 Achievements</h5>
+                    <ul class="list-unstyled">
+                      <li>🥇 50+ Projects completed</li>
+                      <li>👥 100+ Happy clients</li>
+                      <li>⏰ 3+ Years experience</li>
+                      <li>☕ 1000+ Cups of coffee</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
-          </transition>
-          <div class="carousel-controls">
-            <button @click="prevSkill" class="carousel-btn">← Prev</button>
-            <button @click="nextSkill" class="carousel-btn">Next →</button>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- Right Profile Card -->
-      <div class="card icon">
-        <img src="https://via.placeholder.com/200" alt="Profile Icon" class="profile-img">
-      </div>
-    </div>
-
-    <!-- Project Preview Section -->
-    <div class="projects max-w-3xl mx-auto px-6 py-12">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">Featured Projects</h2>
-      <div class="timeline">
-        <div v-for="(project, index) in projects" :key="index" class="card bg-white shadow-lg rounded-lg overflow-hidden relative">
-          <div class="timeline-dot"></div>
-          <button
-            @click="toggleProjectDetails(index)"
-            class="w-full flex items-center p-6 bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 transition-all duration-300"
-          >
-            <svg
-              :class="{ 'rotate-180': openProjectIndex === index }"
-              class="w-4 h-4 mr-4 transition-transform duration-300"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-            </svg>
-            <div class="text-left flex-1">
-              <h3 class="text-xl font-semibold">{{ project.title }}</h3>
-              <p class="text-sm opacity-80">{{ project.date }}</p>
+    <!-- Skills Section -->
+    <section id="skills" class="py-5">
+      <div class="container">
+        <h2 class="text-center text-white mb-5 fw-bold">🛠️ Skills & Expertise</h2>
+        <div class="row">
+          <div v-for="(skill, index) in skills" :key="index" class="col-lg-4 col-md-6 mb-4">
+            <div :class="['card h-100 shadow', isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark']" @click="showSkillDetails(index)">
+              <div class="card-body text-center">
+                <span class="fs-2 mb-3 d-block">{{ skill.icon }}</span>
+                <h5 class="card-title fw-bold">{{ skill.name }}</h5>
+                <p class="card-text">Click to learn more</p>
+              </div>
             </div>
+          </div>
+        </div>
+        <Transition name="fade">
+          <div v-if="selectedSkill" class="row mt-5">
+            <div class="col-lg-8 mx-auto">
+              <div :class="['card shadow', isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark']">
+                <div class="card-body p-4">
+                  <h4 class="card-title fw-bold">{{ selectedSkill.name }}</h4>
+                  <p class="card-text">{{ selectedSkill.description }}</p>
+                  <div class="progress mb-3">
+                    <div class="progress-bar bg-primary" :style="{ width: skillProgress + '%' }"></div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <small>Experience: {{ selectedSkill.experience }}</small>
+                    <small>Level: {{ selectedSkill.level }}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-5">
+      <div class="container">
+        <h2 class="text-center text-white mb-5 fw-bold">📊 Featured Projects</h2>
+        <div class="text-center mb-4">
+          <button v-for="filter in projectFilters" :key="filter.value" :class="['btn btn-outline-light me-2', { 'btn-primary': activeFilter === filter.value }]" @click="setActiveFilter(filter.value)">
+            {{ filter.label }}
           </button>
-          <transition name="slide">
-            <div v-if="openProjectIndex === index" class="p-6 border-t border-gray-200 bg-gray-50">
-              <p class="text-gray-800">{{ project.description }}</p>
-              <a :href="project.link" target="_blank" class="project-link mt-4 inline-block">View Project</a>
+        </div>
+        <div class="row">
+          <div v-for="(project, index) in filteredProjects" :key="index" class="col-lg-4 col-md-6 mb-4">
+            <div :class="['card h-100 shadow', isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark']">
+              <img :src="project.image" :alt="project.title" class="card-img-top" style="height: 250px; object-fit: cover;" />
+              <div class="card-body position-relative">
+                <div class="project-overlay">
+                  <h5 class="card-title fw-bold">{{ project.title }}</h5>
+                  <p class="card-text">{{ project.description }}</p>
+                  <div class="mb-3">
+                    <span v-for="tech in project.technologies" :key="tech" class="badge bg-light text-dark me-1">{{ tech }}</span>
+                  </div>
+                  <div class="mb-3">
+                    <span class="me-3">⭐ {{ projectStats[index]?.stars || 0 }} Stars</span>
+                    <span>👀 {{ projectStats[index]?.views || 0 }} Views</span>
+                  </div>
+                  <a :href="project.link" class="btn btn-light">🔗 View Project</a>
+                </div>
+              </div>
             </div>
-          </transition>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Recent Activity Timeline -->
-    <div class="timeline max-w-3xl mx-auto px-6 py-12">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">Recent Activity</h2>
-      <div v-for="(activity, index) in recentActivities" :key="index" class="card bg-white shadow-lg rounded-lg overflow-hidden relative">
-        <div class="timeline-dot"></div>
-        <div class="p-6">
-          <h3 class="text-xl font-semibold text-gray-800">{{ activity.title }}</h3>
-          <p class="text-sm text-gray-600">{{ activity.date }}</p>
-          <p class="text-gray-800 mt-2">{{ activity.description }}</p>
+    <!-- Comments Section -->
+    <section id="comments" class="py-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+            <div :class="['card shadow', isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark']">
+              <div class="card-body p-5">
+                <h3 class="text-center mb-4 fw-bold">💬 Leave a Comment</h3>
+                <form @submit.prevent="addComment" class="mb-4">
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <input v-model="commentForm.name" type="text" class="form-control" placeholder="Your Name" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <input v-model="commentForm.email" type="email" class="form-control" placeholder="Your Email" required />
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <textarea v-model="commentForm.message" class="form-control" rows="4" placeholder="Your message..." required></textarea>
+                  </div>
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-primary">📤 Post Comment</button>
+                  </div>
+                </form>
+                <h5 class="mb-3">Recent Comments ({{ comments.length }})</h5>
+                <div v-if="comments.length === 0" class="text-muted text-center">No comments yet. Be the first to leave a comment!</div>
+                <div v-else>
+                  <div v-for="(comment, index) in comments" :key="index" :class="['p-3 mb-2 rounded', isDarkMode ? 'bg-dark-subtle' : 'bg-light']">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                      <h6 class="mb-0 fw-bold">{{ comment.name }}</h6>
+                      <small class="text-muted">{{ comment.timestamp }}</small>
+                    </div>
+                    <p class="mb-0">{{ comment.message }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- Contact Section -->
-    <div class="card contact max-w-3xl mx-auto px-6 py-4">
-      <div class="contact-content">
-        <p>Email: <a href="mailto:helenchan@email.com" class="contact-link">helenchan@email.com</a></p>
-        <p>Phone: <a href="tel:+1234567890" class="contact-link">(123) 456-7890</a></p>
-        <p>Location: City, Country</p>
-        <div class="social-links">
-          <a href="https://linkedin.com" target="_blank" class="social-icon" title="LinkedIn">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-1.337-.026-3.058-1.867-3.058-1.867 0-2.152 1.458-2.152 2.965v5.697h-3v-11h2.879v1.508h.04c.401-.757 1.379-1.557 2.834-1.557 3.033 0 3.592 1.996 3.592 4.592v6.457z"/>
-            </svg>
-          </a>
-          <a href="https://github.com" target="_blank" class="social-icon" title="GitHub">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.333-1.754-1.333-1.754-1.087-.744.083-.729.083-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.834 2.809 1.304 3.495.997.108-.776.418-1.305.762-1.605-2.665-.305-5.466-1.332-5.466-5.931 0-1.31.465-2.38 1.236-3.221-.123-.303-.535-1.523.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.241 2.873.118 3.176.771.841 1.234 1.911 1.234 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.218.694.824.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-            </svg>
-          </a>
+    <section id="contact" class="py-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+            <div :class="['card shadow', isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark']">
+              <div class="card-body p-5">
+                <h2 class="text-center mb-4 fw-bold">📧 Get In Touch</h2>
+                <div class="row">
+                  <div class="col-md-6">
+                    <form @submit.prevent="handleContactForm">
+                      <div class="mb-3">
+                        <input v-model="contactForm.name" type="text" class="form-control" placeholder="Your Name" required />
+                      </div>
+                      <div class="mb-3">
+                        <input v-model="contactForm.email" type="email" class="form-control" placeholder="Your Email" required />
+                      </div>
+                      <div class="mb-3">
+                        <input v-model="contactForm.subject" type="text" class="form-control" placeholder="Subject" required />
+                      </div>
+                      <div class="mb-3">
+                        <textarea v-model="contactForm.message" class="form-control" rows="5" placeholder="Your Message" required></textarea>
+                      </div>
+                      <button type="submit" class="btn btn-primary w-100" :disabled="isSubmitting">
+                        <span v-if="!isSubmitting">Send Message</span>
+                        <span v-else><span class="spinner-border spinner-border-sm me-2"></span>Sending...</span>
+                      </button>
+                    </form>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mt-4 mt-md-0">
+                      <div class="mb-4">
+                        <h5 class="fw-bold">📍 Location</h5>
+                        <p>San Francisco, CA</p>
+                      </div>
+                      <div class="mb-4">
+                        <h5 class="fw-bold">✉️ Email</h5>
+                        <p>helen.chan@email.com</p>
+                      </div>
+                      <div class="mb-4">
+                        <h5 class="fw-bold">📞 Phone</h5>
+                        <p>+1 (555) 123-4567</p>
+                      </div>
+                      <div>
+                        <h5 class="fw-bold">🔗 Follow Me</h5>
+                        <div class="d-flex gap-2">
+                          <a href="#" class="btn btn-outline-primary">LinkedIn</a>
+                          <a href="#" class="btn btn-outline-primary">GitHub</a>
+                          <a href="#" class="btn btn-outline-primary">Twitter</a>
+                          <a href="#" class="btn btn-outline-primary">Instagram</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
+
+    <!-- Fun Fact Modal -->
+    <Transition name="modal">
+      <div v-if="showPopup" class="modal fade show d-block" tabindex="-1" @click="hideFunFact">
+        <div class="modal-dialog modal-dialog-centered" @click.stop>
+          <div :class="['modal-content', isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark']">
+            <div class="modal-body text-center">
+              <h4 class="fw-bold">🎉 Fun Fact!</h4>
+              <p>{{ currentFunFact }}</p>
+              <button class="btn btn-light" @click="hideFunFact">Got it!</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Toast Notification -->
+    <Transition name="toast">
+      <div v-if="showToast" class="toast show position-fixed top-0 end-0 m-3" role="alert">
+        <div class="toast-body bg-success text-white">✅ {{ toastMessage }}</div>
+      </div>
+    </Transition>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 
-// Theme Toggle
-const isDarkMode = ref(false)
+// Theme management
+const isDarkMode = ref(false);
 const toggleTheme = () => {
-  isDarkMode.value = !isDarkMode.value
-  document.documentElement.classList.toggle('dark', isDarkMode.value)
-}
-
-// Typing Animation
-const fullText = 'Hi, I am Helen Chan, a passionate web developer!'
-const typedText = ref('')
-const typingSpeed = 100
-let index = 0
-
-const type = () => {
-  if (index < fullText.length) {
-    typedText.value += fullText.charAt(index)
-    index++
-    setTimeout(type, typingSpeed)
-  } else {
-    setTimeout(() => {
-      typedText.value = ''
-      index = 0
-      type()
-    }, 3000)
+  isDarkMode.value = !isDarkMode.value;
+  if (process.client) {
+    localStorage.setItem('darkMode', isDarkMode.value.toString());
   }
-}
+};
+const checkDarkMode = () => {
+  if (process.client) {
+    const savedMode = localStorage.getItem('darkMode');
+    if (savedMode) {
+      isDarkMode.value = savedMode === 'true';
+    }
+  }
+};
 
-// Dynamic Tagline Rotator
-const captions = [
+// Typing animation
+const typedText = ref('');
+const texts = ['Hi, I\'m Helen Chan', 'Web Developer', 'UI/UX Designer', 'Problem Solver'];
+let currentTextIndex = 0;
+let typingIndex = 0;
+const startTypingAnimation = () => {
+  const typeText = () => {
+    const currentText = texts[currentTextIndex];
+    if (typingIndex < currentText.length) {
+      typedText.value += currentText.charAt(typingIndex);
+      typingIndex++;
+      setTimeout(typeText, 100);
+    } else {
+      setTimeout(eraseText, 2000);
+    }
+  };
+  const eraseText = () => {
+    if (typedText.value.length > 0) {
+      typedText.value = typedText.value.slice(0, -1);
+      setTimeout(eraseText, 50);
+    } else {
+      currentTextIndex = (currentTextIndex + 1) % texts.length;
+      typingIndex = 0;
+      setTimeout(typeText, 500);
+    }
+  };
+  typeText();
+};
+
+// Subtitles
+const subtitles = [
   'Building the web, one line at a time.',
   'Turning ideas into interactive experiences.',
   'Passionate about code and creativity.',
   'Welcome to my digital playground!'
-]
-const currentCaption = ref(captions[0])
-let captionIndex = 0
-let captionInterval = null
+];
+const currentSubtitle = ref(subtitles[0]);
+let currentSubtitleIndex = 0;
+let subtitleInterval = null;
+const changeSubtitle = () => {
+  currentSubtitleIndex = (currentSubtitleIndex + 1) % subtitles.length;
+  currentSubtitle.value = subtitles[currentSubtitleIndex];
+};
 
-const changeCaption = () => {
-  captionIndex = (captionIndex + 1) % captions.length
-  currentCaption.value = captions[captionIndex]
-}
-
-const startCaptionRotator = () => {
-  captionInterval = setInterval(() => {
-    changeCaption()
-  }, 5000)
-}
-
-// Fun Facts with Glow
+// Fun facts
 const funFacts = [
-  'Helen once coded for 24 hours straight!',
-  'Helen loves solving complex algorithms.',
-  'Helen is passionate about web development.',
-  'Helen built her first website at 16!'
-]
-const currentFact = ref('')
-
+  'I once coded for 24 hours straight and only stopped for coffee! ☕',
+  'I\'ve built over 50 websites and each one taught me something new! 🚀',
+  'I started coding at age 16 with a simple \'Hello World\' program! 👨‍💻',
+  'I can solve a Rubik\'s cube while debugging code! 🧩',
+  'I\'ve consumed over 1,000 cups of coffee while coding! ☕',
+  'I learned my first programming language from a library book! 📚'
+];
+const currentFunFact = ref('');
+const showPopup = ref(false);
 const showFunFact = () => {
-  const randomIndex = Math.floor(Math.random() * funFacts.length)
-  currentFact.value = funFacts[randomIndex]
-}
+  const randomIndex = Math.floor(Math.random() * funFacts.length);
+  currentFunFact.value = funFacts[randomIndex];
+  showPopup.value = true;
+};
+const hideFunFact = () => {
+  showPopup.value = false;
+};
 
-// Skill Carousel
+// Skills
 const skills = ref([
-  { name: 'JavaScript', description: 'Proficient in dynamic web applications.', proficiency: 80 },
-  { name: 'Vue.js', description: 'Experienced in reactive UIs.', proficiency: 75 },
-  { name: 'CSS', description: 'Skilled in responsive designs.', proficiency: 85 }
-])
-const currentSkill = ref(skills.value[0])
-let skillIndex = 0
-let carouselInterval = null
+  { name: 'JavaScript', icon: '⚡', description: 'Modern ES6+ JavaScript development with focus on clean, efficient code.', proficiency: 90, experience: '3+ years', level: 'Expert' },
+  { name: 'React', icon: '⚛️', description: 'Building dynamic user interfaces with React and Redux.', proficiency: 85, experience: '2+ years', level: 'Advanced' },
+  { name: 'Vue.js', icon: '💚', description: 'Creating reactive applications with Vue.js and Nuxt.js.', proficiency: 80, experience: '2+ years', level: 'Advanced' },
+  { name: 'Node.js', icon: '🟢', description: 'Backend development with Node.js and Express.', proficiency: 75, experience: '2+ years', level: 'Intermediate' },
+  { name: 'Python', icon: '🐍', description: 'Data analysis and web development with Python.', proficiency: 70, experience: '1+ years', level: 'Intermediate' },
+  { name: 'CSS', icon: '🎨', description: 'Responsive design with CSS3, SASS, and modern frameworks.', proficiency: 95, experience: '3+ years', level: 'Expert' }
+]);
+const selectedSkill = ref(null);
+const skillProgress = ref(0);
+const showSkillDetails = (index) => {
+  selectedSkill.value = skills.value[index];
+  skillProgress.value = 0;
+  setTimeout(() => {
+    skillProgress.value = selectedSkill.value.proficiency;
+  }, 300);
+  if (process.client) {
+    setTimeout(() => {
+      const element = document.querySelector('#skills .card:last-child');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
+  }
+};
 
-const nextSkill = () => {
-  skillIndex = (skillIndex + 1) % skills.value.length
-  currentSkill.value = skills.value[skillIndex]
-}
-
-const prevSkill = () => {
-  skillIndex = (skillIndex - 1 + skills.value.length) % skills.value.length
-  currentSkill.value = skills.value[skillIndex]
-}
-
-const startSkillCarousel = () => {
-  carouselInterval = setInterval(() => {
-    nextSkill()
-  }, 5000)
-}
-
-const pauseCarousel = () => {
-  clearInterval(carouselInterval)
-}
-
-const resumeCarousel = () => {
-  startSkillCarousel()
-}
-
-// Project Preview
+// Projects
 const projects = ref([
-  {
-    title: 'Personal Portfolio',
-    date: 'July 2025',
-    description: 'A dynamic portfolio showcasing my skills, experiences, and projects with a modern UI.',
-    link: 'https://example.com/portfolio'
-  },
-  {
-    title: 'E-Commerce Web App',
-    date: 'June 2025',
-    description: 'Built a responsive e-commerce platform using Vue.js and Nuxt.js.',
-    link: 'https://example.com/ecommerce'
-  }
-])
-const openProjectIndex = ref(null)
-const toggleProjectDetails = (index) => {
-  openProjectIndex.value = openProjectIndex.value === index ? null : index
-}
+  { title: 'E-Commerce Platform', description: 'Full-stack e-commerce solution with React and Node.js', image: 'https://picsum.photos/400/250?random=2', category: 'web', technologies: ['React', 'Node.js', 'MongoDB'], link: '#' },
+  { title: 'Mobile Banking App', description: 'React Native app for mobile banking', image: 'https://picsum.photos/400/250?random=3', category: 'mobile', technologies: ['React Native', 'Firebase'], link: '#' },
+  { title: 'Portfolio Website', description: 'Responsive portfolio website with modern design', image: 'https://picsum.photos/400/250?random=4', category: 'design', technologies: ['HTML', 'CSS', 'JavaScript'], link: '#' },
+  { title: 'Task Management App', description: 'Vue.js application for project management', image: 'https://picsum.photos/400/250?random=5', category: 'web', technologies: ['Vue.js', 'Vuex', 'Firebase'], link: '#' },
+  { title: 'Weather Dashboard', description: 'Real-time weather application with data visualization', image: 'https://picsum.photos/400/250?random=6', category: 'web', technologies: ['JavaScript', 'Chart.js', 'API'], link: '#' },
+  { title: 'Brand Identity Design', description: 'Complete brand identity and logo design', image: 'https://picsum.photos/400/250?random=7', category: 'design', technologies: ['Photoshop', 'Illustrator'], link: '#' }
+]);
+const projectFilters = ref([
+  { label: 'All', value: 'all' },
+  { label: 'Web Apps', value: 'web' },
+  { label: 'Mobile', value: 'mobile' },
+  { label: 'Design', value: 'design' }
+]);
+const activeFilter = ref('all');
+const filteredProjects = computed(() => {
+  if (activeFilter.value === 'all') return projects.value;
+  return projects.value.filter(project => project.category === activeFilter.value);
+});
+const projectStats = ref({});
+const fetchProjectStats = () => {
+  const mockStats = projects.value.reduce((acc, _, index) => {
+    acc[index] = {
+      stars: Math.floor(Math.random() * 1000),
+      views: Math.floor(Math.random() * 5000)
+    };
+    return acc;
+  }, {});
+  projectStats.value = mockStats;
+};
+const setActiveFilter = (filter) => {
+  activeFilter.value = filter;
+};
 
-// Recent Activity
-const recentActivities = ref([
-  {
-    title: 'Launched Portfolio Website',
-    date: 'July 2025',
-    description: 'Published my personal portfolio to showcase my skills and projects.'
-  },
-  {
-    title: 'Completed Vue.js Project',
-    date: 'June 2025',
-    description: 'Built a dynamic web app using Vue.js and Nuxt.js.'
-  },
-  {
-    title: 'Joined Tech Meetup',
-    date: 'May 2025',
-    description: 'Connected with local developers to share knowledge.'
+// Comments
+const comments = ref([]);
+const commentForm = ref({ name: '', email: '', message: '' });
+const addComment = () => {
+  if (commentForm.value.name && commentForm.value.email && commentForm.value.message) {
+    comments.value.unshift({
+      name: commentForm.value.name,
+      email: commentForm.value.email,
+      message: commentForm.value.message,
+      timestamp: new Date().toLocaleString()
+    });
+    commentForm.value = { name: '', email: '', message: '' };
+    showSuccessMessage('Comment added successfully!');
   }
-])
+};
 
+// Contact form
+const contactForm = ref({ name: '', email: '', subject: '', message: '' });
+const isSubmitting = ref(false);
+const handleContactForm = () => {
+  isSubmitting.value = true;
+  setTimeout(() => {
+    isSubmitting.value = false;
+    contactForm.value = { name: '', email: '', subject: '', message: '' };
+    showSuccessMessage('Message sent successfully!');
+  }, 2000);
+};
+
+// Toast notification
+const showToast = ref(false);
+const toastMessage = ref('');
+const showSuccessMessage = (message) => {
+  toastMessage.value = message;
+  showToast.value = true;
+  setTimeout(() => {
+    showToast.value = false;
+  }, 3000);
+};
+
+// Scroll to section
+const scrollToSection = (sectionId) => {
+  if (process.client) {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+};
+
+// Lifecycle hooks
 onMounted(() => {
-  type()
-  startSkillCarousel()
-  startCaptionRotator()
-})
-
+  checkDarkMode();
+  startTypingAnimation();
+  fetchProjectStats();
+  subtitleInterval = setInterval(() => {
+    changeSubtitle();
+  }, 5000);
+});
 onUnmounted(() => {
-  clearInterval(carouselInterval)
-  clearInterval(captionInterval)
-})
+  if (subtitleInterval) {
+    clearInterval(subtitleInterval);
+  }
+});
 </script>
 
 <style lang="scss" scoped>
-.page {
-  background-color: #87ceeb; // Sky blue
-  font-family: Arial, sans-serif;
+/* Minimal SCSS for essential customizations */
+.container-fluid {
   min-height: 100vh;
-  position: relative;
-  overflow: hidden;
-  transition: background-color 0.3s ease;
-
-  &.dark-mode {
-    background-color: #2c3e50;
-
-    .banner {
-      background: linear-gradient(90deg, #1a252f, #2d3748);
-      color: #fff;
-    }
-
-    .card {
-      background-color: #34495e;
-
-      .description h1,
-      .description .caption,
-      .fun-fact,
-      .skill-title,
-      .skill-description,
-      .contact p,
-      .contact-link,
-      .text-gray-800,
-      .text-gray-600 {
-        color: #fff;
-      }
-
-      .progress {
-        background-color: #4a90e2;
-      }
-
-      .fun-fact {
-        text-shadow: 0 0 10px #ffd700;
-      }
-    }
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  &.bg-dark {
+    background: linear-gradient(135deg, #232526 0%, #414345 100%);
   }
 }
 
-// Clouds Background
-.clouds {
+/* Navbar */
+.navbar {
+  background: linear-gradient(45deg, rgba(93, 92, 222, 0.95), rgba(0, 221, 235, 0.95)) !important;
+}
+.bg-dark .navbar {
+  background: linear-gradient(45deg, rgba(35, 37, 38, 0.95), rgba(65, 67, 69, 0.95)) !important;
+}
+.nav-link:hover::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: #5d5cde;
+  transform: translateX(-50%);
+}
+
+/* Typing cursor */
+.typing-cursor {
+  animation: blink 1s infinite;
+}
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Card hover effect */
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Project overlay */
+.project-overlay {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.cloud {
-  position: absolute;
-  background: white;
-  border-radius: 50%;
-  opacity: 0.7;
-  animation: drift linear infinite;
-}
-
-.cloud1 {
-  width: 100px;
-  height: 60px;
-  top: 10%;
-  left: -100px;
-  animation-duration: 20s;
-}
-
-.cloud2 {
-  width: 150px;
-  height: 90px;
-  top: 30%;
-  left: -150px;
-  animation-duration: 25s;
-}
-
-.cloud3 {
-  width: 80px;
-  height: 50px;
-  top: 50%;
-  left: -80px;
-  animation-duration: 30s;
-}
-
-@keyframes drift {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(100vw);
-  }
-}
-
-// Banner
-.banner {
-  background: linear-gradient(90deg, #007bff, #00ddeb); // Static gradient
-  height: 60px;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(93, 92, 222, 0.9), rgba(0, 221, 235, 0.9));
+  color: white;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 0 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-
-  .banner-left {
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: #fff;
-  }
-
-  .banner-right {
-    display: flex;
-    gap: 10px;
-  }
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.card:hover .project-overlay {
+  opacity: 1;
 }
 
-// Navigation and Theme Buttons
-.nav-btn {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  text-decoration: none;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-    transform: scale(1.05);
-  }
+/* Progress bar */
+.progress {
+  height: 10px;
+  border-radius: 10px;
+}
+.progress-bar {
+  transition: width 2s ease-in-out;
 }
 
-.theme-btn {
-  background-color: #fff;
-  color: #007bff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-
-  &:hover {
-    background-color: #f0f0f0;
-    transform: scale(1.05);
-  }
-}
-
-// Main Content
-.main-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 40px 20px;
-  position: relative;
-  z-index: 1;
-
-  .description {
-    flex: 1;
-    padding: 20px;
-    border-radius: 8px;
-
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-    }
-
-    .typing {
-      display: inline-block;
-    }
-
-    .cursor {
-      display: inline-block;
-      animation: blink 0.7s infinite;
-    }
-
-    .caption {
-      font-size: 1rem;
-      color: #333;
-      margin-bottom: 1rem;
-      transition: opacity 0.5s ease;
-    }
-
-    .button-group {
-      display: flex;
-      gap: 10px;
-    }
-
-    .fun-btn,
-    .caption-btn,
-    .carousel-btn {
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-
-      &:hover {
-        background-color: #0056b3;
-        transform: scale(1.05);
-      }
-    }
-
-    .fun-fact {
-      margin-top: 10px;
-      font-style: italic;
-      color: #555;
-      text-shadow: 0 0 5px #007bff;
-      transition: text-shadow 0.3s ease;
-    }
-
-    .skill-carousel {
-      margin-top: 20px;
-    }
-
-    .skill-card {
-      background: #f9fafb;
-      padding: 15px;
-      border-radius: 8px;
-      transition: all 0.3s ease;
-
-      .skill-title {
-        font-size: 1.2rem;
-        font-weight: bold;
-        color: #333;
-      }
-
-      .skill-description {
-        font-size: 0.9rem;
-        color: #555;
-        margin-top: 5px;
-      }
-
-      .progress-bar {
-        margin-top: 10px;
-      }
-
-      .progress-container {
-        width: 100%;
-        height: 8px;
-        background: #e0e0e0;
-        border-radius: 4px;
-        overflow: hidden;
-      }
-
-      .progress {
-        height: 100%;
-        background: #007bff;
-        transition: width 0.5s ease;
-      }
-    }
-
-    .carousel-controls {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-      justify-content: center;
-    }
-  }
-
-  .icon {
-    flex: 0;
-    padding: 20px;
-    border-radius: 8px;
-    transition: transform 0.3s ease;
-
-    &:hover {
-      transform: rotate(5deg);
-    }
-
-    .profile-img {
-      border-radius: 50%;
-      width: 200px;
-      height: 200px;
-      object-fit: cover;
-      border: 4px solid #007bff;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-      &:hover {
-        transform: scale(1.15);
-        box-shadow: 0 0 20px rgba(0, 123, 255, 0.5);
-      }
-    }
-  }
-}
-
-// Projects and Timeline
-.projects,
-.timeline {
-  position: relative;
-  padding-left: 20px;
-
-  &::before {
-    content: '';
-    position: absolute;
-    left: 10px;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: #007bff;
-    border-radius: 2px;
-  }
-
-  .timeline-dot {
-    position: absolute;
-    left: 6px;
-    top: 20px;
-    width: 12px;
-    height: 12px;
-    background: #007bff;
-    border-radius: 50%;
-    animation: pulse 2s ease infinite;
-  }
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.2); opacity: 0.7; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-// Contact Section
-.contact {
-  padding: 20px;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 1;
-
-  &:hover {
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-  }
-
-  .contact-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    align-items: center;
-  }
-
-  .contact-link {
-    color: #fff;
-    text-decoration: none;
-    transition: color 0.3s ease;
-
-    &:hover {
-      color: #007bff;
-      text-decoration: underline;
-    }
-  }
-
-  .social-links {
-    display: flex;
-    gap: 15px;
-
-    .social-icon {
-      color: #fff;
-      transition: transform 0.3s ease, color 0.3s ease;
-
-      &:hover {
-        color: #007bff;
-        transform: rotate(360deg) scale(1.2);
-      }
-    }
-  }
-}
-
-// Cards
-.card {
-  transition: box-shadow 0.3s ease;
-  margin-left: 20px;
-
-  &:hover {
-    box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
-  }
-
-  .project-link {
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: white;
-    border-radius: 4px;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: #0056b3;
-    }
-  }
-}
-
-// Animations
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-.fade-enter-active,
-.fade-leave-active {
+/* Transitions */
+.fade-enter-active, .fade-leave-active {
   transition: opacity 0.5s ease;
 }
-.fade-enter-from,
-.fade-leave-to {
+.fade-enter-from, .fade-leave-to {
   opacity: 0;
+}
+.modal-enter-active, .modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+.modal-enter-from, .modal-leave-to {
+  opacity: 0;
+}
+.toast-enter-active, .toast-leave-active {
+  transition: all 0.3s ease;
+}
+.toast-enter-from, .toast-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
 }
 
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.5s ease, opacity 0.5s ease;
+/* White text for headers */
+h1, h2, h3, h4, h5, h6 {
+  color: #ffffff !important;
+  font-weight: bold;
 }
-.slide-enter-from {
-  transform: translateX(-20px);
-  opacity: 0;
-}
-.slide-leave-to {
-  transform: translateX(20px);
-  opacity: 0;
+.navbar-brand {
+  color: #ffffff !important;
+  font-weight: bold;
 }
 </style>

@@ -1,359 +1,533 @@
 <template>
-  <div :class="['page', { 'dark-mode': isDarkMode }]">
-    <!-- Background Clouds -->
-    <div class="clouds">
-      <div class="cloud cloud1"></div>
-      <div class="cloud cloud2"></div>
-      <div class="cloud cloud3"></div>
-    </div>
-
-    <!-- Top Banner -->
-    <div class="banner">
-      <div class="banner-left">Experience</div>
-      <div class="banner-right">
-        <button @click="toggleTheme" class="theme-btn">
-          {{ isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode' }}
-        </button>
-        <NuxtLink to="/" class="nav-btn">Back to Home</NuxtLink>
-      </div>
-    </div>
-
-    <!-- Experience Content -->
-    <div class="max-w-3xl mx-auto space-y-6 px-6 py-12">
-      <div class="timeline">
-        <div v-for="(exp, index) in experiences" :key="index" class="card bg-white shadow-lg rounded-lg overflow-hidden relative">
-          <!-- Timeline Dot -->
-          <div class="timeline-dot"></div>
-          <button
-            @click="toggleDetails(index)"
-            class="w-full flex items-center p-6 bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 transition-all duration-300"
-          >
-            <svg
-              :class="{ 'rotate-180': openIndex === index }"
-              class="w-4 h-4 mr-4 transition-transform duration-300"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-            </svg>
-            <div class="text-left flex-1">
-              <h3 class="text-xl font-semibold">{{ exp.title }} - {{ exp.company }}</h3>
-              <p class="text-sm opacity-80">{{ exp.years }}</p>
-            </div>
+  <div :class="['container-fluid', { 'bg-dark': isDarkMode, 'bg-light': !isDarkMode }]">
+    <!-- Header -->
+    <header class="bg-primary bg-gradient text-white py-3 mb-4 shadow-sm sticky-top">
+      <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <h1 class="h4 mb-0 fw-bold">Professional Experience Timeline</h1>
+        <div class="d-flex gap-2">
+          <button @click="toggleTheme" class="btn btn-light btn-sm">
+            {{ isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode" }}
           </button>
-          <transition name="slide">
-            <div v-if="openIndex === index" class="p-6 border-t border-gray-200 bg-gray-50">
-              <ul class="space-y-2">
-                <li v-for="(ach, achIndex) in exp.achievements" :key="achIndex" :class="{ 'highlight': highlightedAchievement === ach }">
-                  {{ ach }}
-                </li>
-              </ul>
-              <button @click="highlightAchievement(index)" class="highlight-btn mt-4">Highlight Achievement!</button>
-            </div>
-          </transition>
+          <button @click="exportData" class="btn btn-outline-light btn-sm">📄 Export</button>
+          <button @click="sharePortfolio" class="btn btn-outline-light btn-sm">🔗 Share</button>
+          <NuxtLink to="/" class="btn btn-light btn-sm">🏠 Home</NuxtLink>
         </div>
       </div>
-    </div>
+    </header>
 
-    <!-- Confetti Canvas -->
-    <canvas id="confetti-canvas"></canvas>
+    <!-- Main Content -->
+    <main class="container">
+      <!-- Statistics -->
+      <section class="row row-cols-1 row-cols-md-4 g-3 mb-4">
+        <div class="col">
+          <div :class="['card h-100 text-center', isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark']">
+            <div class="card-body">
+              <h2 class="card-title h3 fw-bold">{{ totalYears }}</h2>
+              <p class="card-text">Years Experience</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div :class="['card h-100 text-center', isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark']">
+            <div class="card-body">
+              <h2 class="card-title h3 fw-bold">{{ experiences.length }}</h2>
+              <p class="card-text">Positions Held</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div :class="['card h-100 text-center', isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark']">
+            <div class="card-body">
+              <h2 class="card-title h3 fw-bold">{{ totalAchievements }}</h2>
+              <p class="card-text">Key Achievements</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div :class="['card h-100 text-center', isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark']">
+            <div class="card-body">
+              <h2 class="card-title h3 fw-bold">{{ highlightCount }}</h2>
+              <p class="card-text">Highlights Made</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Search and Filters -->
+      <section :class="['card mb-4', isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark']">
+        <div class="card-body">
+          <input
+            v-model="searchTerm"
+            type="text"
+            class="form-control mb-3"
+            placeholder="Search experiences, companies, or achievements..."
+          />
+          <div class="d-flex flex-wrap gap-2">
+            <button
+              v-for="filter in filters"
+              :key="filter.key"
+              @click="activeFilter = filter.key"
+              :class="['btn btn-sm', activeFilter === filter.key ? 'btn-primary' : 'btn-outline-primary']"
+            >
+              {{ filter.label }}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Experience Timeline -->
+      <section class="position-relative ps-4">
+        <div
+          v-for="exp in filteredExperiences"
+          :key="exp.id"
+          class="mb-4 position-relative"
+        >
+          <div class="position-absolute bg-primary rounded-circle" style="width: 16px; height: 16px; left: -8px; top: 20px;"></div>
+          <div :class="['card', isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark']">
+            <div class="card-header bg-primary bg-gradient text-white d-flex align-items-center" @click="toggleDetails(exp.id)">
+              <span :class="['me-3 fs-5', { 'rotate-45': openExperienceId === exp.id }]">+</span>
+              <div>
+                <h3 class="card-title h5 mb-0">{{ exp.title }} - {{ exp.company }}</h3>
+                <p class="card-text text-white-75 mb-0">{{ exp.years }}</p>
+              </div>
+            </div>
+            <transition name="slide">
+              <div v-if="openExperienceId === exp.id" class="card-body">
+                <h4 class="h6 fw-bold text-primary">Key Achievements:</h4>
+                <ul class="list-unstyled">
+                  <li
+                    v-for="(achievement, index) in exp.achievements"
+                    :key="index"
+                    @click="highlightAchievement(exp.id, index)"
+                    :class="['py-1', {
+                      'border-start border-3 border-warning bg-warning-subtle': highlightedAchievement?.expId === exp.id && highlightedAchievement?.index === index
+                    }]"
+                  >
+                    • {{ achievement }}
+                  </li>
+                </ul>
+                <div class="d-flex flex-wrap gap-2">
+                  <button @click="highlightRandomAchievement(exp.id)" class="btn btn-primary btn-sm">✨ Highlight Random</button>
+                  <button @click="shareExperience(exp)" class="btn btn-success btn-sm">🔗 Share This</button>
+                  <button @click="editExperience(exp)" class="btn btn-warning btn-sm">✏️ Edit</button>
+                </div>
+              </div>
+            </transition>
+          </div>
+        </div>
+      </section>
+
+      <!-- Add Experience Button -->
+      <section class="text-center my-4">
+        <button @click="showAddModal = true" class="btn btn-primary">➕ Add New Experience</button>
+      </section>
+
+      <!-- Add Experience Modal -->
+      <div v-if="showAddModal" class="modal fade show d-block" tabindex="-1" @click="showAddModal = false">
+        <div class="modal-dialog modal-dialog-centered" @click.stop>
+          <div :class="['modal-content', isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark']">
+            <div class="modal-header">
+              <h5 class="modal-title">Add New Experience</h5>
+              <button type="button" class="btn-close" @click="showAddModal = false"></button>
+            </div>
+            <form @submit.prevent="addNewExperience">
+              <div class="modal-body">
+                <div class="mb-3">
+                  <label class="form-label">Job Title</label>
+                  <input v-model="newExperience.title" type="text" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Company</label>
+                  <input v-model="newExperience.company" type="text" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Years</label>
+                  <input v-model="newExperience.years" type="text" class="form-control" placeholder="e.g., 2020 - 2022" required />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Type</label>
+                  <select v-model="newExperience.type" class="form-select">
+                    <option value="junior">Junior</option>
+                    <option value="mid">Mid-level</option>
+                    <option value="senior">Senior</option>
+                  </select>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" @click="showAddModal = false" class="btn btn-secondary">Cancel</button>
+                <button type="submit" class="btn btn-primary">Add Experience</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Experience Modal -->
+      <div v-if="showEditModal" class="modal fade show d-block" tabindex="-1" @click="showEditModal = false">
+        <div class="modal-dialog modal-dialog-centered" @click.stop>
+          <div :class="['modal-content', isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark']">
+            <div class="modal-header">
+              <h5 class="modal-title">Edit Experience</h5>
+              <button type="button" class="btn-close" @click="showEditModal = false"></button>
+            </div>
+            <form @submit.prevent="updateExperience">
+              <div class="modal-body">
+                <div class="mb-3">
+                  <label class="form-label">Job Title</label>
+                  <input v-model="editingExperience.title" type="text" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Company</label>
+                  <input v-model="editingExperience.company" type="text" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Years</label>
+                  <input v-model="editingExperience.years" type="text" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Type</label>
+                  <select v-model="editingExperience.type" class="form-select">
+                    <option value="junior">Junior</option>
+                    <option value="mid">Mid-level</option>
+                    <option value="senior">Senior</option>
+                  </select>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" @click="showEditModal = false" class="btn btn-secondary">Cancel</button>
+                <button type="submit" class="btn btn-primary">Update Experience</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notification -->
+      <div v-if="notification.show" :class="['alert', `alert-${notification.type}`, 'position-fixed top-0 end-0 m-3']">
+        {{ notification.message }}
+      </div>
+    </main>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import confetti from 'canvas-confetti'
+import { ref, computed, onMounted } from 'vue';
 
-// Theme Toggle
-const isDarkMode = ref(false)
-const toggleTheme = () => {
-  isDarkMode.value = !isDarkMode.value
-}
+// Theme management
+const isDarkMode = ref(false);
 
-// Experience data
+// Data
 const experiences = ref([
   {
-    title: 'Intern',
-    company: 'Company Name',
-    years: 'Jan 2020 - Present',
+    id: 1,
+    title: "Senior Software Engineer",
+    company: "Tech Innovations Inc.",
+    years: "2022 - Present",
+    type: "senior",
+    category: "technical",
     achievements: [
-      'Responsibility or achievement 1',
-      'Responsibility or achievement 2'
-    ]
+      "Led development of microservices architecture serving 1M+ users",
+      "Mentored 5 junior developers and improved team productivity by 40%",
+      "Implemented CI/CD pipeline reducing deployment time by 60%",
+      "Designed and built real-time analytics dashboard",
+      "Contributed to open-source projects with 500+ GitHub stars",
+    ],
   },
   {
-    title: 'Junior Developer',
-    company: 'Tech Corp',
-    years: 'Jun 2018 - Dec 2019',
+    id: 2,
+    title: "Frontend Developer",
+    company: "Digital Solutions Ltd.",
+    years: "2020 - 2022",
+    type: "mid",
+    category: "technical",
     achievements: [
-      'Developed a new feature for the main product',
-      'Improved team workflow with automation tools'
-    ]
+      "Developed responsive web applications using React and Vue.js",
+      "Improved website performance by 50% through optimization",
+      "Collaborated with UX team to implement modern design systems",
+      "Built Progressive Web App with offline capabilities",
+    ],
+  },
+  {
+    id: 3,
+    title: "Junior Developer",
+    company: "StartUp Ventures",
+    years: "2018 - 2020",
+    type: "junior",
+    category: "technical",
+    achievements: [
+      "Built and maintained company website using modern frameworks",
+      "Participated in agile development processes",
+      "Learned and applied best practices in software development",
+      "Contributed to code reviews and technical documentation",
+    ],
+  },
+]);
+
+// State
+const openExperienceId = ref(null);
+const highlightedAchievement = ref(null);
+const highlightCount = ref(0);
+const searchTerm = ref("");
+const activeFilter = ref("all");
+const showAddModal = ref(false);
+const showEditModal = ref(false);
+const newExperience = ref({
+  title: "",
+  company: "",
+  years: "",
+  type: "mid",
+  category: "technical",
+  achievements: ["New achievement to be added"],
+});
+const editingExperience = ref({});
+const notification = ref({
+  show: false,
+  message: "",
+  type: "success",
+});
+
+// Filters
+const filters = [
+  { key: "all", label: "All" },
+  { key: "recent", label: "Recent" },
+  { key: "senior", label: "Senior" },
+  { key: "technical", label: "Technical" },
+];
+
+// Computed properties
+const totalYears = computed(() => {
+  const currentYear = new Date().getFullYear();
+  const startYear = Math.min(
+    ...experiences.value.map((exp) => {
+      const match = exp.years.match(/(\d{4})/);
+      return match ? parseInt(match[1]) : currentYear;
+    })
+  );
+  return currentYear - startYear;
+});
+
+const totalAchievements = computed(() => {
+  return experiences.value.reduce(
+    (sum, exp) => sum + exp.achievements.length,
+    0
+  );
+});
+
+const filteredExperiences = computed(() => {
+  return experiences.value.filter((exp) => {
+    const matchesSearch =
+      searchTerm.value === "" ||
+      exp.title.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
+      exp.company.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
+      exp.achievements.some((achievement) =>
+        achievement.toLowerCase().includes(searchTerm.value.toLowerCase())
+      );
+
+    let matchesFilter = true;
+    if (activeFilter.value === "recent") {
+      matchesFilter =
+        exp.years.includes("2022") ||
+        exp.years.includes("2023") ||
+        exp.years.includes("Present");
+    } else if (activeFilter.value === "senior") {
+      matchesFilter = exp.type === "senior";
+    } else if (activeFilter.value === "technical") {
+      matchesFilter = exp.category === "technical";
+    }
+
+    return matchesSearch && matchesFilter;
+  });
+});
+
+// Methods
+const toggleTheme = () => {
+  isDarkMode.value = !isDarkMode.value;
+};
+
+const toggleDetails = (expId) => {
+  openExperienceId.value = openExperienceId.value === expId ? null : expId;
+};
+
+const highlightAchievement = (expId, achIndex) => {
+  highlightedAchievement.value = { expId, index: achIndex };
+  highlightCount.value++;
+};
+
+const highlightRandomAchievement = (expId) => {
+  const exp = experiences.value.find((e) => e.id === expId);
+  if (exp) {
+    const randomIndex = Math.floor(Math.random() * exp.achievements.length);
+    highlightAchievement(expId, randomIndex);
   }
-])
+};
 
-// Track which experience entry is open
-const openIndex = ref(null)
-const toggleDetails = (index) => {
-  openIndex.value = openIndex.value === index ? null : index
-}
+const shareExperience = async (exp) => {
+  const shareText = `Check out my experience as ${exp.title} at ${exp.company} (${exp.years})`;
+  if (process.client) {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Professional Experience",
+          text: shareText,
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.log("Share cancelled");
+      }
+    } else if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(shareText);
+        showNotification("Experience details copied to clipboard!", "success");
+      } catch (err) {
+        showNotification("Failed to copy to clipboard", "error");
+      }
+    }
+  }
+};
 
-// Highlight achievement
-const highlightedAchievement = ref('')
-const highlightAchievement = (index) => {
-  const achievements = experiences.value[index].achievements
-  const randomIndex = Math.floor(Math.random() * achievements.length)
-  highlightedAchievement.value = achievements[randomIndex]
-  confetti({
-    particleCount: 100,
-    spread: 70,
-    origin: { y: 0.6 }
-  })
-}
+const editExperience = (exp) => {
+  editingExperience.value = { ...exp };
+  showEditModal.value = true;
+};
+
+const updateExperience = () => {
+  const index = experiences.value.findIndex(
+    (e) => e.id === editingExperience.value.id
+  );
+  if (index !== -1) {
+    experiences.value[index] = { ...editingExperience.value };
+    showEditModal.value = false;
+    showNotification("Experience updated successfully!", "success");
+  }
+};
+
+const addNewExperience = () => {
+  const newExp = {
+    ...newExperience.value,
+    id: Math.max(...experiences.value.map((e) => e.id)) + 1,
+    category: "technical",
+  };
+  experiences.value.unshift(newExp);
+  showAddModal.value = false;
+  newExperience.value = {
+    title: "",
+    company: "",
+    years: "",
+    type: "mid",
+    category: "technical",
+    achievements: ["New achievement to be added"],
+  };
+  showNotification("New experience added successfully!", "success");
+};
+
+const exportData = () => {
+  if (process.client) {
+    const content = experiences.value
+      .map(
+        (exp) =>
+          `${exp.title} - ${exp.company} (${exp.years})\n${exp.achievements
+            .map((a) => `• ${a}`)
+            .join("\n")}`
+      )
+      .join("\n\n");
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "professional-experience.txt";
+    a.click();
+    URL.revokeObjectURL(url);
+    showNotification("Experience exported successfully!", "success");
+  }
+};
+
+const sharePortfolio = async () => {
+  if (process.client) {
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "My Professional Experience Timeline",
+          text: "Check out my professional journey and achievements",
+          url: url,
+        });
+      } catch (err) {
+        console.log("Share cancelled");
+      }
+    } else if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(url);
+        showNotification("Portfolio link copied to clipboard!", "success");
+      } catch (err) {
+        showNotification("Failed to copy link", "error");
+      }
+    }
+  }
+};
+
+const showNotification = (message, type = "success") => {
+  notification.value = { show: true, message, type };
+  setTimeout(() => {
+    notification.value.show = false;
+  }, 3000);
+};
+
+// Theme detection
+onMounted(() => {
+  if (process.client && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    isDarkMode.value = true;
+  }
+});
 </script>
 
 <style lang="scss" scoped>
-.page {
-  background-color: #87ceeb; // Sky blue
-  font-family: Arial, sans-serif;
+/* Minimal SCSS for essential customizations */
+.container-fluid {
   min-height: 100vh;
-  position: relative;
-  overflow: hidden;
-  transition: background-color 0.3s ease;
-
-  &.dark-mode {
-    background-color: #2c3e50;
-
-    .banner {
-      background-color: #1a252f;
-      color: #fff;
-    }
-
-    .card {
-      background-color: #34495e;
-      color: #fff;
-
-      .text-gray-600 {
-        color: #ccc;
-      }
-
-      .text-gray-800 {
-        color: #fff;
-      }
-
-      .border-gray-200 {
-        border-color: #4a5568;
-      }
-
-      .bg-gray-50 {
-        background-color: #3b4a5e;
-      }
-
-      .highlight {
-        color: #ffd700;
-      }
-    }
-  }
 }
 
-// Clouds Background
-.clouds {
+/* Timeline line */
+section.position-relative::before {
+  content: "";
   position: absolute;
+  left: 15px;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  z-index: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(to bottom, #0d6efd, #6610f2);
+  border-radius: 2px;
 }
 
-.cloud {
-  position: absolute;
-  background: white;
-  border-radius: 50%;
-  opacity: 0.7;
-  animation: drift linear infinite;
+/* Rotate expand icon */
+.rotate-45 {
+  transform: rotate(45deg);
+  transition: transform 0.3s ease;
 }
 
-.cloud1 {
-  width: 100px;
-  height: 60px;
-  top: 10%;
-  left: -100px;
-  animation-duration: 20s;
-}
-
-.cloud2 {
-  width: 150px;
-  height: 90px;
-  top: 30%;
-  left: -150px;
-  animation-duration: 25s;
-}
-
-.cloud3 {
-  width: 80px;
-  height: 50px;
-  top: 50%;
-  left: -80px;
-  animation-duration: 30s;
-}
-
-@keyframes drift {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(100vw);
-  }
-}
-
-// Banner
-.banner {
-  background: linear-gradient(90deg, #007bff, #00ddeb);
-  height: 45px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  position: relative;
-  z-index: 1;
-  animation: gradientShift 5s ease infinite;
-
-  .banner-left {
-    font-weight: bold;
-    font-size: 1rem;
-    color: #fff;
-  }
-
-  .banner-right {
-    display: flex;
-    gap: 10px;
-  }
-}
-
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-// Navigation and Theme Buttons
-.nav-btn {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  text-decoration: none;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-    transform: scale(1.05);
-  }
-}
-
-.theme-btn {
-  background-color: #fff;
-  color: #007bff;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-
-  &:hover {
-    background-color: #f0f0f0;
-    transform: scale(1.05);
-  }
-}
-
-// Timeline
-.timeline {
-  position: relative;
-  padding-left: 20px;
-
-  &::before {
-    content: '';
-    position: absolute;
-    left: 10px;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: #007bff;
-    border-radius: 2px;
-  }
-}
-
-.timeline-dot {
-  position: absolute;
-  left: 6px;
-  top: 20px;
-  width: 12px;
-  height: 12px;
-  background: #007bff;
-  border-radius: 50%;
-  animation: pulse 2s ease infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.2); opacity: 0.7; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-// Experience Cards
-.card {
-  transition: box-shadow 0.3s ease;
-  margin-left: 20px;
-
-  &:hover {
-    box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
-  }
-
-  button {
-    text-align: left;
-  }
-
-  .highlight {
-    color: #007bff;
-    font-weight: bold;
-  }
-}
-
-.highlight-btn {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-}
-
-// Slide Transition
+/* Slide transition for card content */
 .slide-enter-active,
 .slide-leave-active {
-  transition: opacity 0.3s ease, max-height 0.3s ease;
+  transition: all 0.4s ease;
 }
+
 .slide-enter-from,
 .slide-leave-to {
   opacity: 0;
   max-height: 0;
   overflow: hidden;
 }
+
 .slide-enter-to,
 .slide-leave-from {
   opacity: 1;
-  max-height: 300px;
+  max-height: 1000px;
+}
+
+/* White text for specific elements */
+.word_beautiful,
+.card-header .card-title,
+.card-header .card-text {
+  color: #ffffff !important;
+  font-weight: bold;
 }
 </style>

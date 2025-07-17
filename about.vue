@@ -14,6 +14,11 @@
       class="navbar navbar-expand-lg navbar-dark bg-transparent position-sticky top-0"
       style="z-index: 1000"
     >
+
+    <button  @click="toggleTheme" class=" theme-toggle btn btn-group btn-sm mt-50 ">
+            {{ isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode" }}
+            </button>
+
       <div class="container-fluid px-4">
         <span class="navbar-brand fw-bold fs-4 mb-0">
           <i class="fas fa-user-circle me-2"></i>About Me
@@ -522,5 +527,32 @@ body.dark {
   .timeline-marker {
     left: -1.75rem;
   }
+}
+
+/* Default light mode */
+:root, [data-theme="light"] {
+  --background: #fff;
+  --text-color: #1a202c;
+  --toggle-bg: #4a90e2;
+  --toggle-hover-bg: #357abd;
+  --toggle-focus: #2a5a94;
+  --toggle-color: #fff;
+}
+
+/* Dark mode */
+[data-theme="dark"] {
+  --background: #1a202c;
+  --text-color: #e2e8f0;
+  --toggle-bg: #6b7280;
+  --toggle-hover-bg: #4b5563;
+  --toggle-focus: #9ca3af;
+  --toggle-color: #fff;
+}
+
+/* Apply theme variables */
+body {
+  background-color: var(--background);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 </style>

@@ -5,16 +5,15 @@
       <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
         <h1 class="h4 mb-0 fw-bold">Professional Experience Timeline</h1>
         <div class="d-flex gap-2">
-          <button @click="toggleTheme" class="btn btn-light btn-sm">
-            {{ isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode" }}
-          </button>
+          
           <button @click="exportData" class="btn btn-outline-light btn-sm">📄 Export</button>
           <button @click="sharePortfolio" class="btn btn-outline-light btn-sm">🔗 Share</button>
           <NuxtLink to="/" class="btn btn-light btn-sm">🏠 Home</NuxtLink>
         </div>
       </div>
     </header>
-
+<button  @click="toggleTheme" class=" theme-toggle btn btn-light btn-sm mt-50">
+            {{ isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode" }}</button>
     <!-- Main Content -->
     <main class="container">
       <!-- Statistics -->
@@ -529,5 +528,32 @@ section.position-relative::before {
 .card-header .card-text {
   color: #ffffff !important;
   font-weight: bold;
+}
+
+/* Default light mode */
+:root, [data-theme="light"] {
+  --background: #fff;
+  --text-color: #1a202c;
+  --toggle-bg: #4a90e2;
+  --toggle-hover-bg: #357abd;
+  --toggle-focus: #2a5a94;
+  --toggle-color: #fff;
+}
+
+/* Dark mode */
+[data-theme="dark"] {
+  --background: #1a202c;
+  --text-color: #e2e8f0;
+  --toggle-bg: #6b7280;
+  --toggle-hover-bg: #4b5563;
+  --toggle-focus: #9ca3af;
+  --toggle-color: #fff;
+}
+
+/* Apply theme variables */
+body {
+  background-color: var(--background);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 </style>

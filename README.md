@@ -102,4 +102,4 @@ Every push to `main` then triggers an automatic production deployment.
 
 - GitHub: [@ChanHei419](https://github.com/ChanHei419)
 - LinkedIn: [helon-chan](https://www.linkedin.com/in/helon-chan/)
-- Email: cccheilllun4129@gmail.com
+- Email: cccheilllun419@gmail.com

@@ -473,8 +473,8 @@
                             :class="
                               isDarkMode ? 'link-light' : 'link-dark'
                             "
-                            href="mailto:cccheilllun4129@gmail.com"
-                            >cccheilllun4129@gmail.com</a
+                            href="mailto:cccheilllun419@gmail.com"
+                            >cccheilllun419@gmail.com</a
                           >
                         </p>
                       </div>
@@ -558,7 +558,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 
 const GITHUB_USERNAME = "ChanHei419";
 const LINKEDIN_URL = "https://www.linkedin.com/in/helon-chan/";
-const EMAIL = "cccheilllun4129@gmail.com";
+const EMAIL = "cccheilllun419@gmail.com";
 
 // Theme management — dark-first design, respects a saved preference
 const isDarkMode = ref(true);

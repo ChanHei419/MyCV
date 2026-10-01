@@ -22,7 +22,7 @@
               class="text-white me-3"
               >LinkedIn</a
             >
-            <a href="mailto:cccheilllun4129@gmail.com" class="text-white"
+            <a href="mailto:cccheilllun419@gmail.com" class="text-white"
               >Email</a
             >
           </p>

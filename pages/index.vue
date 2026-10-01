@@ -13,6 +13,23 @@
       {{ isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode" }}
     </button>
 
+    <!-- Ambient particles -->
+    <div class="particles" aria-hidden="true">
+      <span
+        v-for="particle in particles"
+        :key="particle.id"
+        class="particle"
+        :style="{
+          left: particle.left + '%',
+          top: particle.top + '%',
+          width: particle.size + 'px',
+          height: particle.size + 'px',
+          animationDuration: particle.duration + 's',
+          animationDelay: particle.delay + 's',
+        }"
+      ></span>
+    </div>
+
     <!-- Hero Section -->
     <section id="home" class="py-5 d-flex align-items-center min-vh-100">
       <div class="container">
@@ -21,7 +38,7 @@
             <p class="hero-kicker mb-2">
               Information Engineering @ CUHK · Hong Kong
             </p>
-            <h1 class="display-3 fw-bold text-white">
+            <h1 class="display-3 fw-bold text-white hero-title">
               {{ typedText }}<span class="typing-cursor">|</span>
             </h1>
             <p
@@ -66,19 +83,25 @@
           <div
             class="col-lg-6 text-center animate__animated animate__fadeInRight"
           >
-            <img
-              src="/profile.jpg"
-              alt="HeiChan"
-              class="rounded-circle img-fluid shadow"
-              style="max-width: 300px"
-            />
+            <div class="hero-avatar-wrap">
+              <div class="hero-avatar-glow"></div>
+              <img
+                src="/profile.jpg"
+                alt="HeiChan"
+                class="rounded-circle img-fluid shadow hero-avatar"
+                style="max-width: 300px"
+              />
+            </div>
           </div>
+        </div>
+        <div class="scroll-cue text-center">
+          <span class="scroll-cue-dot"></span>
         </div>
       </div>
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-5">
+    <section id="about" class="py-5" data-reveal>
       <div class="container">
         <div class="row">
           <div class="col-lg-8 mx-auto">
@@ -125,7 +148,7 @@
     </section>
 
     <!-- Skills Section -->
-    <section id="skills" class="py-5">
+    <section id="skills" class="py-5" data-reveal>
       <div class="container">
         <h2 class="text-center text-white mb-3 fw-bold">
           🛠️ Skills &amp; Expertise
@@ -186,7 +209,7 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="projects" class="py-5">
+    <section id="projects" class="py-5" data-reveal>
       <div class="container">
         <h2 class="text-center text-white mb-3 fw-bold">
           📊 Featured Projects
@@ -287,7 +310,7 @@
     </section>
 
     <!-- Comments Section -->
-    <section id="comments" class="py-5">
+    <section id="comments" class="py-5" data-reveal>
       <div class="container">
         <div class="row">
           <div class="col-lg-8 mx-auto">
@@ -368,7 +391,7 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-5">
+    <section id="contact" class="py-5" data-reveal>
       <div class="container">
         <div class="row">
           <div class="col-lg-8 mx-auto">
@@ -537,8 +560,8 @@ const GITHUB_USERNAME = "ChanHei419";
 const LINKEDIN_URL = "https://www.linkedin.com/in/helon-chan/";
 const EMAIL = "cccheilllun4129@gmail.com";
 
-// Theme management
-const isDarkMode = ref(false);
+// Theme management — dark-first design, respects a saved preference
+const isDarkMode = ref(true);
 const toggleTheme = () => {
   isDarkMode.value = !isDarkMode.value;
   if (import.meta.client) {
@@ -936,11 +959,46 @@ const scrollToSection = (sectionId) => {
   }
 };
 
+// Ambient particles
+const particles = ref([]);
+const buildParticles = () => {
+  particles.value = Array.from({ length: 26 }, (_, id) => ({
+    id,
+    left: Math.random() * 100,
+    top: Math.random() * 100,
+    size: 2 + Math.random() * 4,
+    duration: 10 + Math.random() * 14,
+    delay: -Math.random() * 24,
+  }));
+};
+
+// Scroll-reveal animations
+const observeReveals = () => {
+  if (!import.meta.client || !("IntersectionObserver" in window)) return;
+  document.documentElement.classList.add("reveal-init");
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12 }
+  );
+  document
+    .querySelectorAll("[data-reveal]")
+    .forEach((element) => observer.observe(element));
+};
+
 // Lifecycle hooks
 onMounted(() => {
   checkDarkMode();
+  buildParticles();
   startTypingAnimation();
   fetchProjectStats();
+  observeReveals();
   subtitleInterval = setInterval(() => {
     changeSubtitle();
   }, 5000);
@@ -956,9 +1014,191 @@ onUnmounted(() => {
 /* Minimal SCSS for essential customizations */
 .container-fluid {
   min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
   &.bg-dark {
-    background: linear-gradient(135deg, #232526 0%, #414345 100%);
+    background:
+      radial-gradient(1100px 600px at 12% 8%, rgba(124, 58, 237, 0.32), transparent 60%),
+      radial-gradient(900px 520px at 88% 18%, rgba(37, 99, 235, 0.28), transparent 62%),
+      radial-gradient(800px 600px at 50% 100%, rgba(14, 165, 233, 0.18), transparent 65%),
+      linear-gradient(160deg, #070b18 0%, #0d1226 55%, #140f2b 100%);
+  }
+}
+
+/* Keep content above ambient particles */
+.container,
+section {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ambient floating particles */
+.particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(199, 210, 254, 0.45);
+  box-shadow: 0 0 10px rgba(125, 211, 252, 0.45);
+  animation-name: particle-drift;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes particle-drift {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(-48px) scale(1.25);
+    opacity: 0.1;
+  }
+}
+
+/* Hero extras */
+.hero-title {
+  background: linear-gradient(92deg, #ffffff 0%, #c7d2fe 45%, #7dd3fc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-title .typing-cursor {
+  -webkit-text-fill-color: #7dd3fc;
+}
+
+.hero-avatar-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.hero-avatar-glow {
+  position: absolute;
+  inset: -18px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #7c3aed, #2563eb, #06b6d4, #7c3aed);
+  filter: blur(26px);
+  opacity: 0.55;
+  animation: glow-spin 12s linear infinite;
+  z-index: 0;
+}
+
+.hero-avatar {
+  position: relative;
+  z-index: 1;
+  border: 3px solid rgba(255, 255, 255, 0.18);
+  animation: float-soft 6s ease-in-out infinite;
+}
+
+@keyframes glow-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+/* Scroll cue */
+.scroll-cue {
+  margin-top: 2rem;
+}
+
+.scroll-cue-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.12);
+  animation: cue-bounce 1.8s ease-in-out infinite;
+}
+
+@keyframes cue-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(12px);
+    opacity: 0.4;
+  }
+}
+
+/* Glass panels in dark mode */
+.bg-dark {
+  .card {
+    background: rgba(17, 24, 43, 0.62) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    color: #e2e8f0;
+  }
+
+  .card:hover {
+    border-color: rgba(125, 211, 252, 0.45);
+    box-shadow: 0 0 0 1px rgba(125, 211, 252, 0.18),
+      0 18px 40px rgba(2, 6, 23, 0.55) !important;
+  }
+}
+
+/* Neon buttons */
+.btn-primary {
+  background: linear-gradient(120deg, #6d28d9, #2563eb);
+  border: none;
+  box-shadow: 0 6px 20px rgba(76, 29, 149, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(56, 189, 248, 0.35);
+}
+
+/* Scroll-reveal */
+.reveal-init [data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal-init [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .particle,
+  .hero-avatar,
+  .hero-avatar-glow,
+  .scroll-cue-dot {
+    animation: none !important;
+  }
+
+  .reveal-init [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
 

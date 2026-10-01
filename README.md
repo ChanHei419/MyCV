@@ -15,8 +15,8 @@ An interactive, multi-page CV / portfolio built with **Nuxt 3** — engineered a
 ## Highlights
 
 - **Multi-page Nuxt 3 architecture** — file-based routing, layout system, and component auto-imports
+- **Dark / light mode** — dark-first design with an animated aurora background, floating particles, glowing avatar ring, and scroll-reveal animations; preference persisted per visitor
 - **Live GitHub integration** — project cards pull real repo stats from the GitHub REST API with graceful offline fallbacks
-- **Dark / light mode** — persisted per visitor, with reactive styling across every page
 - **Animated hero** — typewriter loop, rotating taglines, floating background shapes
 - **Interactive project grid** — category filters, SVG-generated project covers (no stock photos)
 - **Skills portfolio** — 20+ skills across four domains, live dashboard statistics, flip cards, filtering, add / remove, JSON export
@@ -77,6 +77,21 @@ npm run build
 # static generation
 npm run generate
 ```
+
+## Deployment
+
+### Vercel (recommended — zero config)
+
+1. Go to [vercel.com/new](https://vercel.com/new) and import the `MyCV` repository.
+2. Vercel auto-detects Nuxt — keep the defaults (`npm install` + `npm run build`) and deploy.
+3. Optional: add a custom domain under Project Settings → Domains.
+
+Every push to `main` then triggers an automatic production deployment.
+
+### Netlify
+
+1. Go to [app.netlify.com/start](https://app.netlify.com/start) and pick the repository.
+2. Netlify auto-detects Nuxt 3 — keep the detected build settings and deploy.
 
 ## Notes
 

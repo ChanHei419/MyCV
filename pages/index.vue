@@ -1,144 +1,159 @@
 <template>
-  <div
-    :data-bs-theme="isDarkMode ? 'dark' : 'light'"
-    :class="[
-      'container-fluid',
-      { 'bg-dark darkmode': isDarkMode, 'bg-light': !isDarkMode },
-    ]"
-  >
-    <button
-      @click="toggleTheme"
-      class="theme-toggle theme-togglebtn btn-light btn-sm mt-50"
-    >
-      {{ isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode" }}
+  <main class="home">
+    <button class="theme-toggle" @click="toggleTheme" aria-label="Toggle theme">
+      <i :class="isDarkMode ? 'fa-solid fa-sun' : 'fa-solid fa-moon'"></i>
     </button>
 
-    <!-- Ambient particles -->
-    <div class="particles" aria-hidden="true">
-      <span
-        v-for="particle in particles"
-        :key="particle.id"
-        class="particle"
-        :style="{
-          left: particle.left + '%',
-          top: particle.top + '%',
-          width: particle.size + 'px',
-          height: particle.size + 'px',
-          animationDuration: particle.duration + 's',
-          animationDelay: particle.delay + 's',
-        }"
-      ></span>
-    </div>
-
-    <!-- Hero Section -->
-    <section id="home" class="py-5 d-flex align-items-center min-vh-100">
+    <!-- ================= Hero ================= -->
+    <section class="hero section-shell">
       <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-6 animate__animated animate__fadeInLeft">
-            <p class="hero-kicker mb-2">
-              Information Engineering @ CUHK · Hong Kong
-            </p>
-            <h1 class="display-3 fw-bold text-white hero-title">
-              {{ typedText }}<span class="typing-cursor">|</span>
+        <div class="row align-items-center g-5">
+          <div class="col-lg-7" data-reveal>
+            <span class="section-kicker">
+              <i class="fa-solid fa-graduation-cap"></i>
+              BEng Information Engineering · CUHK
+            </span>
+            <h1 class="hero-title">
+              <span class="gradient-text">{{ typedText }}</span
+              ><span class="typing-cursor">|</span>
             </h1>
-            <p
-              class="lead"
-              :class="{
-                'text-white': isDarkMode,
-                'text-white-75': !isDarkMode,
-              }"
-            >
-              {{ currentSubtitle }}
+            <p class="hero-lede">
+              I build across three domains — software engineering, cloud &amp;
+              AI automation, and data. From Azure infrastructure as code to
+              applied audio ML and full-stack applications, I like problems
+              that force me to learn something new fast.
             </p>
-            <div class="d-flex flex-wrap gap-3 mb-4">
-              <button class="btn btn-primary" @click="showFunFact">
-                💡 Fun Fact
+
+            <div class="d-flex flex-wrap gap-3 mt-4">
+              <button class="btn btn-primary btn-lg" @click="scrollToSection('projects')">
+                <i class="fa-solid fa-diagram-project me-2"></i>View Projects
               </button>
-              <button class="btn btn-primary" @click="changeSubtitle">
-                🔄 New Tagline
-              </button>
-            </div>
-            <div class="d-flex flex-wrap gap-3">
-              <button
-                class="btn btn-outline-light btn-lg"
-                @click="scrollToSection('projects')"
-              >
-                📁 View My Work
-              </button>
-              <button
-                class="btn btn-outline-light btn-lg"
-                @click="scrollToSection('contact')"
-              >
-                ✉️ Get In Touch
+              <button class="btn btn-outline-light btn-lg" @click="scrollToSection('contact')">
+                <i class="fa-solid fa-paper-plane me-2"></i>Get In Touch
               </button>
               <a
-                href="https://www.linkedin.com/in/helon-chan/"
+                href="https://github.com/ChanHei419"
                 target="_blank"
                 rel="noopener"
                 class="btn btn-outline-light btn-lg"
-                >💼 LinkedIn</a
               >
+                <i class="fa-brands fa-github me-2"></i>GitHub
+              </a>
+            </div>
+
+            <div class="row g-3 mt-5">
+              <div class="col-6 col-md-3">
+                <div class="glass-card stat-tile">
+                  <div class="stat-value">{{ stats.repos }}</div>
+                  <div class="stat-label">Public Repos</div>
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <div class="glass-card stat-tile">
+                  <div class="stat-value">{{ stats.projects }}</div>
+                  <div class="stat-label">Featured Projects</div>
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <div class="glass-card stat-tile">
+                  <div class="stat-value">22</div>
+                  <div class="stat-label">Skills</div>
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <div class="glass-card stat-tile">
+                  <div class="stat-value">4</div>
+                  <div class="stat-label">Domains</div>
+                </div>
+              </div>
             </div>
           </div>
-          <div
-            class="col-lg-6 text-center animate__animated animate__fadeInRight"
-          >
-            <div class="hero-avatar-wrap">
-              <div class="hero-avatar-glow"></div>
-              <img
-                src="/profile.jpg"
-                alt="HeiChan"
-                class="rounded-circle img-fluid shadow hero-avatar"
-                style="max-width: 300px"
-              />
+
+          <div class="col-lg-5 text-center" data-reveal>
+            <div class="avatar-stage">
+              <div class="avatar-ring"></div>
+              <img src="/profile.jpg" alt="HeiChan" class="avatar-image" />
+              <span class="tech-orbit orbit-1" title="Microsoft Azure">
+                <i class="fa-brands fa-microsoft"></i>
+              </span>
+              <span class="tech-orbit orbit-2" title="PyTorch">
+                <i class="fa-solid fa-brain"></i>
+              </span>
+              <span class="tech-orbit orbit-3" title="Nuxt 3 / Vue">
+                <i class="fa-brands fa-vuejs"></i>
+              </span>
+              <span class="tech-orbit orbit-4" title="Terraform">
+                <i class="fa-solid fa-cubes"></i>
+              </span>
+              <span class="tech-orbit orbit-5" title="Python">
+                <i class="fa-brands fa-python"></i>
+              </span>
+              <span class="tech-orbit orbit-6" title="SQL Databases">
+                <i class="fa-solid fa-database"></i>
+              </span>
             </div>
           </div>
-        </div>
-        <div class="scroll-cue text-center">
-          <span class="scroll-cue-dot"></span>
         </div>
       </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="py-5" data-reveal>
+    <!-- ================= What I Do ================= -->
+    <section class="section-shell" data-reveal>
       <div class="container">
-        <div class="row">
-          <div class="col-lg-8 mx-auto">
-            <div
-              :class="[
-                'card shadow',
-                isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark',
-              ]"
-            >
-              <div class="card-body p-5">
-                <h2 class="text-center mb-4 fw-bold text-danger">
-                  <i class="fa-solid fa-house"></i>👤 About Me
-                </h2>
-                <p class="lead text-center mb-4">
-                  I build across three domains — software engineering, cloud &
-                  AI automation, and data — and I like problems that force me
-                  to learn something new fast.
-                </p>
-                <div class="row">
-                  <div class="col-md-6">
-                    <h5 class="fw-bold">❤️ What I Work With</h5>
-                    <ul class="list-unstyled">
-                      <li>☁️ Cloud automation, IaC &amp; CI/CD</li>
-                      <li>🤖 Applied AI pipelines &amp; REST APIs</li>
-                      <li>🧩 Full-stack web &amp; mobile engineering</li>
-                      <li>📊 Data tooling and automation</li>
-                    </ul>
-                  </div>
-                  <div class="col-md-6">
-                    <h5 class="fw-bold">🏆 Impact Highlights</h5>
-                    <ul class="list-unstyled">
-                      <li>🎓 BEng Information Engineering @ CUHK</li>
-                      <li>☁️ Azure + Terraform + OIDC CI/CD automation</li>
-                      <li>🤖 Fine-tuned Wav2Vec2 lyric transcription</li>
-                      <li>⚡ 45% runtime cut on a legacy C#/SQL service</li>
-                    </ul>
-                  </div>
+        <div class="text-center mb-5">
+          <span class="section-kicker justify-content-center d-inline-flex">
+            <i class="fa-solid fa-bullseye"></i> What I Do
+          </span>
+          <h2 class="section-title gradient-text">Four domains, one engineer</h2>
+          <p class="section-lede mx-auto">
+            Every project I take on lands in one of these areas — and most of
+            them connect more than one.
+          </p>
+        </div>
+
+        <div class="row g-4">
+          <div v-for="domain in domains" :key="domain.title" class="col-md-6 col-xl-3">
+            <div class="glass-card h-100 p-4">
+              <span class="icon-badge mb-3">
+                <i :class="domain.icon"></i>
+              </span>
+              <h3 class="h5 fw-bold mb-2">{{ domain.title }}</h3>
+              <p class="text-muted-s small mb-3">{{ domain.description }}</p>
+              <div class="d-flex flex-wrap gap-1">
+                <span v-for="tech in domain.tech" :key="tech" class="chip">{{ tech }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Tech Stack ================= -->
+    <section class="section-shell" data-reveal>
+      <div class="container">
+        <div class="row g-4 align-items-start">
+          <div class="col-lg-4">
+            <span class="section-kicker">
+              <i class="fa-solid fa-microchip"></i> Tech Stack
+            </span>
+            <h2 class="section-title gradient-text">Tools I reach for</h2>
+            <p class="section-lede mb-4">
+              A working stack rather than a buzzword list — every item here has
+              shipped in a project or runs in my lab.
+            </p>
+            <NuxtLink to="/skills" class="btn btn-outline-light">
+              <i class="fa-solid fa-layer-group me-2"></i>Full skills breakdown
+            </NuxtLink>
+          </div>
+
+          <div class="col-lg-8">
+            <div class="glass-card p-4">
+              <div class="stack-group" v-for="group in techStack" :key="group.name">
+                <h6 class="stack-group-title">{{ group.name }}</h6>
+                <div class="d-flex flex-wrap gap-2">
+                  <span v-for="item in group.items" :key="item.name" class="chip">
+                    <i :class="item.icon"></i> {{ item.name }}
+                  </span>
                 </div>
               </div>
             </div>
@@ -147,160 +162,86 @@
       </div>
     </section>
 
-    <!-- Skills Section -->
-    <section id="skills" class="py-5" data-reveal>
+    <!-- ================= Projects ================= -->
+    <section id="projects" class="section-shell" data-reveal>
       <div class="container">
-        <h2 class="text-center text-white mb-3 fw-bold">
-          🛠️ Skills &amp; Expertise
-        </h2>
-        <p class="text-center text-white-75 mb-5">
-          Software Engineering · Cloud &amp; AI · Data · Security
-        </p>
-        <div class="row">
-          <div
-            v-for="(skill, index) in skills"
-            :key="index"
-            class="col-12 col-md-6 col-lg-4 mb-4"
-          >
-            <div
-              :class="[
-                'card h-100 shadow',
-                isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark',
-              ]"
-              @click="showSkillDetails(index)"
-            >
-              <div class="card-body text-center">
-                <span class="fs-2 mb-3 d-block">{{ skill.icon }}</span>
-                <h5 class="card-title fw-bold">{{ skill.name }}</h5>
-                <p class="card-text small mb-2">{{ skill.tagline }}</p>
-                <p class="mb-0 small opacity-75">Click to learn more</p>
-              </div>
-            </div>
-          </div>
+        <div class="text-center mb-4">
+          <span class="section-kicker justify-content-center d-inline-flex">
+            <i class="fa-solid fa-diagram-project"></i> Featured Work
+          </span>
+          <h2 class="section-title gradient-text">Projects, not tutorials</h2>
+          <p class="section-lede mx-auto">
+            Real work from internships, CUHK Information Engineering coursework,
+            and personal builds — each with tests and documentation.
+          </p>
         </div>
-        <Transition name="fade">
-          <div v-if="selectedSkill" class="row mt-5">
-            <div class="col-lg-8 mx-auto">
-              <div
-                :class="[
-                  'card shadow',
-                  isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark',
-                ]"
-              >
-                <div class="card-body p-4">
-                  <h4 class="card-title fw-bold">{{ selectedSkill.name }}</h4>
-                  <p class="card-text">{{ selectedSkill.description }}</p>
-                  <div class="progress mb-3">
-                    <div
-                      class="progress-bar bg-primary"
-                      :style="{ width: skillProgress + '%' }"
-                    ></div>
-                  </div>
-                  <div class="d-flex justify-content-between">
-                    <small>Experience: {{ selectedSkill.experience }}</small>
-                    <small>Level: {{ selectedSkill.level }}</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Transition>
-      </div>
-    </section>
 
-    <!-- Projects Section -->
-    <section id="projects" class="py-5" data-reveal>
-      <div class="container">
-        <h2 class="text-center text-white mb-3 fw-bold">
-          📊 Featured Projects
-        </h2>
-        <p class="text-center text-white-75 mb-4">
-          Real work from internships, CUHK Information Engineering coursework,
-          and personal builds.
-        </p>
         <div class="text-center mb-4">
           <button
             v-for="filter in projectFilters"
             :key="filter.value"
             :class="[
-              'btn btn-outline-light me-2 mb-2',
-              { 'btn-primary': activeFilter === filter.value },
+              'btn btn-sm me-2 mb-2 filter-btn',
+              activeFilter === filter.value ? 'btn-primary' : 'btn-outline-light',
             ]"
-            @click="setActiveFilter(filter.value)"
+            @click="activeFilter = filter.value"
           >
-            {{ filter.label }}
+            <i :class="filter.icon" class="me-1"></i>{{ filter.label }}
           </button>
         </div>
-        <div class="row">
+
+        <div class="row g-4">
           <div
             v-for="project in filteredProjects"
             :key="project.title"
-            class="col-lg-4 col-md-6 mb-4"
+            class="col-lg-4 col-md-6"
           >
-            <div
-              :class="[
-                'card h-100 shadow project-card',
-                isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark',
-              ]"
-            >
-              <img
-                :src="project.image"
-                :alt="project.title"
-                class="card-img-top"
-                style="height: 210px; object-fit: cover"
-              />
-              <div class="card-body d-flex flex-column">
-                <div
-                  class="d-flex justify-content-between align-items-start mb-2"
-                >
-                  <h5 class="card-title fw-bold mb-0 me-2">
-                    {{ project.title }}
-                  </h5>
-                  <span class="badge bg-primary rounded-pill flex-shrink-0">{{
-                    project.period
-                  }}</span>
-                </div>
-                <p class="card-text small">{{ project.description }}</p>
-                <ul class="list-unstyled small project-highlights mb-3">
-                  <li
-                    v-for="highlight in project.highlights"
-                    :key="highlight"
-                  >
-                    ▹ {{ highlight }}
+            <div class="glass-card project-card h-100">
+              <div class="project-cover-wrap">
+                <img
+                  :src="project.image"
+                  :alt="project.title"
+                  class="project-cover"
+                />
+                <span class="project-category">{{ project.badge }}</span>
+              </div>
+              <div class="p-4 d-flex flex-column h-100">
+                <h3 class="h6 fw-bold mb-2">{{ project.title }}</h3>
+                <p class="text-muted-s small mb-3">{{ project.description }}</p>
+                <ul class="project-points small mb-3">
+                  <li v-for="highlight in project.highlights" :key="highlight">
+                    {{ highlight }}
                   </li>
                 </ul>
-                <div class="mb-3">
+                <div class="d-flex flex-wrap gap-1 mb-3">
                   <span
                     v-for="tech in project.technologies"
                     :key="tech"
-                    class="badge bg-secondary me-1 mb-1"
+                    class="chip chip-mini"
                     >{{ tech }}</span
                   >
                 </div>
-                <div
-                  class="mt-auto d-flex justify-content-between align-items-center"
-                >
-                  <small
-                    :class="isDarkMode ? 'text-white-50' : 'text-muted'"
-                  >
-                    <span v-if="project.language"
-                      >🛠️ {{ project.language }}</span
-                    >
-                    <span v-if="project.stars" class="ms-2"
-                      >⭐ {{ project.stars }}</span
-                    >
-                    <span v-if="project.updatedAt" class="ms-2"
-                      >· Updated {{ project.updatedAt }}</span
-                    >
+                <div class="mt-auto d-flex justify-content-between align-items-center">
+                  <small class="text-muted-s">
+                    <span v-if="project.language">
+                      <i class="fa-solid fa-code"></i> {{ project.language }}
+                    </span>
+                    <span v-if="project.stars" class="ms-2">
+                      <i class="fa-solid fa-star"></i> {{ project.stars }}
+                    </span>
+                    <span v-if="project.updatedAt" class="ms-2">
+                      <i class="fa-regular fa-clock"></i> {{ project.updatedAt }}
+                    </span>
                   </small>
                   <a
                     v-if="project.link"
                     :href="project.link"
                     target="_blank"
                     rel="noopener"
-                    class="btn btn-outline-primary btn-sm"
-                    >GitHub ↗</a
+                    class="btn btn-sm btn-outline-light"
                   >
+                    <i class="fa-brands fa-github me-1"></i>Code
+                  </a>
                 </div>
               </div>
             </div>
@@ -309,457 +250,331 @@
       </div>
     </section>
 
-    <!-- Comments Section -->
-    <section id="comments" class="py-5" data-reveal>
+    <!-- ================= How I Work ================= -->
+    <section class="section-shell" data-reveal>
       <div class="container">
-        <div class="row">
-          <div class="col-lg-8 mx-auto">
-            <div
-              :class="[
-                'card shadow',
-                isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark',
-              ]"
-            >
-              <div class="card-body p-5">
-                <h3 class="text-center mb-4 fw-bold">💬 Leave a Comment</h3>
-                <form @submit.prevent="addComment" class="mb-4">
-                  <div class="row">
-                    <div class="col-md-6 mb-3">
-                      <input
-                        v-model="commentForm.name"
-                        type="text"
-                        class="form-control"
-                        placeholder="Your Name"
-                        required
-                      />
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <input
-                        v-model="commentForm.email"
-                        type="email"
-                        class="form-control"
-                        placeholder="Your Email"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div class="mb-3">
-                    <textarea
-                      v-model="commentForm.message"
+        <div class="text-center mb-5">
+          <span class="section-kicker justify-content-center d-inline-flex">
+            <i class="fa-solid fa-route"></i> How I Work
+          </span>
+          <h2 class="section-title gradient-text">From requirement to release</h2>
+        </div>
+
+        <div class="row g-4">
+          <div v-for="(step, index) in workflow" :key="step.title" class="col-md-6 col-xl-3">
+            <div class="glass-card h-100 p-4 process-card">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="icon-badge subtle">
+                  <i :class="step.icon"></i>
+                </span>
+                <span class="process-index">0{{ index + 1 }}</span>
+              </div>
+              <h3 class="h6 fw-bold mb-2">{{ step.title }}</h3>
+              <p class="text-muted-s small mb-0">{{ step.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Contact ================= -->
+    <section id="contact" class="section-shell" data-reveal>
+      <div class="container">
+        <div class="text-center mb-5">
+          <span class="section-kicker justify-content-center d-inline-flex">
+            <i class="fa-solid fa-envelope"></i> Contact
+          </span>
+          <h2 class="section-title gradient-text">Let's build something</h2>
+          <p class="section-lede mx-auto">
+            Open to graduate roles in software engineering, cloud &amp; AI
+            automation, and data.
+          </p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+          <div class="col-lg-5">
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <div class="glass-card p-4 h-100 contact-tile">
+                  <i class="fa-solid fa-location-dot"></i>
+                  <h6>Location</h6>
+                  <p>Hong Kong</p>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="glass-card p-4 h-100 contact-tile">
+                  <i class="fa-solid fa-envelope"></i>
+                  <h6>Email</h6>
+                  <p>
+                    <a href="mailto:cccheilllun419@gmail.com"
+                      >cccheilllun419@gmail.com</a
+                    >
+                  </p>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="glass-card p-4 h-100 contact-tile">
+                  <i class="fa-solid fa-phone"></i>
+                  <h6>Phone</h6>
+                  <p>(+852) 6586 8120</p>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="glass-card p-4 h-100 contact-tile">
+                  <i class="fa-solid fa-circle-check"></i>
+                  <h6>Status</h6>
+                  <p>Open to opportunities</p>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="glass-card p-4 d-flex gap-3 flex-wrap">
+                  <a
+                    href="https://github.com/ChanHei419"
+                    target="_blank"
+                    rel="noopener"
+                    class="btn btn-outline-light"
+                  >
+                    <i class="fa-brands fa-github me-2"></i>GitHub
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/in/helon-chan/"
+                    target="_blank"
+                    rel="noopener"
+                    class="btn btn-outline-light"
+                  >
+                    <i class="fa-brands fa-linkedin me-2"></i>LinkedIn
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="glass-card p-4 p-lg-5">
+              <h3 class="h5 fw-bold mb-4">
+                <i class="fa-solid fa-paper-plane me-2"></i>Send a message
+              </h3>
+              <form @submit.prevent="handleContactForm">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <input
+                      v-model="contactForm.name"
+                      type="text"
                       class="form-control"
-                      rows="4"
-                      placeholder="Your message..."
+                      placeholder="Your name"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <input
+                      v-model="contactForm.email"
+                      type="email"
+                      class="form-control"
+                      placeholder="Your email"
+                      required
+                    />
+                  </div>
+                  <div class="col-12">
+                    <input
+                      v-model="contactForm.subject"
+                      type="text"
+                      class="form-control"
+                      placeholder="Subject"
+                      required
+                    />
+                  </div>
+                  <div class="col-12">
+                    <textarea
+                      v-model="contactForm.message"
+                      class="form-control"
+                      rows="5"
+                      placeholder="Your message"
                       required
                     ></textarea>
                   </div>
-                  <div class="text-center">
-                    <button type="submit" class="btn btn-primary">
-                      📤 Post Comment
-                    </button>
-                  </div>
-                </form>
-                <h5 class="mb-3">Recent Comments ({{ comments.length }})</h5>
-                <div
-                  v-if="comments.length === 0"
-                  class="text-muted text-center"
-                >
-                  No comments yet. Be the first to leave a comment!
                 </div>
-                <div v-else>
-                  <div
-                    v-for="(comment, index) in comments"
-                    :key="index"
-                    :class="[
-                      'p-3 mb-2 rounded',
-                      isDarkMode ? 'bg-dark-subtle' : 'bg-light',
-                    ]"
-                  >
-                    <div
-                      class="d-flex justify-content-between align-items-start mb-2"
-                    >
-                      <h6 class="mb-0 fw-bold">{{ comment.name }}</h6>
-                      <small class="text-muted">{{ comment.timestamp }}</small>
-                    </div>
-                    <p class="mb-0">{{ comment.message }}</p>
-                  </div>
-                </div>
-              </div>
+                <button type="submit" class="btn btn-primary w-100 mt-4" :disabled="isSubmitting">
+                  <span v-if="!isSubmitting">
+                    <i class="fa-solid fa-paper-plane me-2"></i>Compose email
+                  </span>
+                  <span v-else>
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                    Opening your mail app...
+                  </span>
+                </button>
+                <p class="text-muted-s small text-center mt-3 mb-0">
+                  This opens your mail client with the message pre-filled.
+                </p>
+              </form>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-5" data-reveal>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 mx-auto">
-            <div
-              :class="[
-                'card shadow',
-                isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark',
-              ]"
-            >
-              <div class="card-body p-5">
-                <h2 class="text-center mb-4 fw-bold">📧 Get In Touch</h2>
-                <div class="row">
-                  <div class="col-md-6">
-                    <form @submit.prevent="handleContactForm">
-                      <div class="mb-3">
-                        <input
-                          v-model="contactForm.name"
-                          type="text"
-                          class="form-control"
-                          placeholder="Your Name"
-                          required
-                        />
-                      </div>
-                      <div class="mb-3">
-                        <input
-                          v-model="contactForm.email"
-                          type="email"
-                          class="form-control"
-                          placeholder="Your Email"
-                          required
-                        />
-                      </div>
-                      <div class="mb-3">
-                        <input
-                          v-model="contactForm.subject"
-                          type="text"
-                          class="form-control"
-                          placeholder="Subject"
-                          required
-                        />
-                      </div>
-                      <div class="mb-3">
-                        <textarea
-                          v-model="contactForm.message"
-                          class="form-control"
-                          rows="5"
-                          placeholder="Your Message"
-                          required
-                        ></textarea>
-                      </div>
-                      <button
-                        type="submit"
-                        class="btn btn-primary w-100"
-                        :disabled="isSubmitting"
-                      >
-                        <span v-if="!isSubmitting">Send Message</span>
-                        <span v-else
-                          ><span
-                            class="spinner-border spinner-border-sm me-2"
-                          ></span
-                          >Sending...</span
-                        >
-                      </button>
-                      <p class="small text-muted text-center mt-2 mb-0">
-                        Demo form — email me directly and I'll reply.
-                      </p>
-                    </form>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="mt-4 mt-md-0">
-                      <div class="mb-4">
-                        <h5 class="fw-bold">📍 Location</h5>
-                        <p>Hong Kong</p>
-                      </div>
-                      <div class="mb-4">
-                        <h5 class="fw-bold">✉️ Email</h5>
-                        <p>
-                          <a
-                            :class="
-                              isDarkMode ? 'link-light' : 'link-dark'
-                            "
-                            href="mailto:cccheilllun419@gmail.com"
-                            >cccheilllun419@gmail.com</a
-                          >
-                        </p>
-                      </div>
-                      <div class="mb-4">
-                        <h5 class="fw-bold">📞 Phone</h5>
-                        <p>(+852) 6586 8120</p>
-                      </div>
-                      <div>
-                        <h5 class="fw-bold">🔗 Find Me Online</h5>
-                        <div class="d-flex gap-2 flex-wrap">
-                          <a
-                            href="https://github.com/ChanHei419"
-                            target="_blank"
-                            rel="noopener"
-                            class="btn btn-outline-primary"
-                            >GitHub</a
-                          >
-                          <a
-                            href="https://www.linkedin.com/in/helon-chan/"
-                            target="_blank"
-                            rel="noopener"
-                            class="btn btn-outline-primary"
-                            >LinkedIn</a
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Fun Fact Modal -->
-    <Transition name="modal">
-      <div
-        v-if="showPopup"
-        class="modal fade show d-block"
-        tabindex="-1"
-        @click="hideFunFact"
-      >
-        <div class="modal-dialog modal-dialog-centered" @click.stop>
-          <div
-            :class="[
-              'modal-content',
-              isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark',
-            ]"
-          >
-            <div class="modal-body text-center">
-              <h4 class="fw-bold">🎉 Fun Fact!</h4>
-              <p>{{ currentFunFact }}</p>
-              <button class="btn btn-light" @click="hideFunFact">
-                Got it!
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Transition>
-
-    <!-- Toast Notification -->
+    <!-- Toast -->
     <Transition name="toast">
-      <div
-        v-if="showToast"
-        class="toast show position-fixed top-0 end-0 m-3"
-        role="alert"
-      >
-        <div class="toast-body bg-success text-white">
-          ✅ {{ toastMessage }}
-        </div>
+      <div v-if="showToast" class="toast-notice">
+        <i class="fa-solid fa-circle-check me-2"></i>{{ toastMessage }}
       </div>
     </Transition>
-  </div>
+  </main>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 
-const GITHUB_USERNAME = "ChanHei419";
-const LINKEDIN_URL = "https://www.linkedin.com/in/helon-chan/";
-const EMAIL = "cccheilllun419@gmail.com";
+const { isDarkMode, toggleTheme } = useDarkMode();
+useReveal();
 
-// Theme management — dark-first design, respects a saved preference
-const isDarkMode = ref(true);
-const toggleTheme = () => {
-  isDarkMode.value = !isDarkMode.value;
+const scrollToSection = (sectionId) => {
   if (import.meta.client) {
-    localStorage.setItem("darkMode", isDarkMode.value.toString());
-  }
-};
-const checkDarkMode = () => {
-  if (import.meta.client) {
-    const savedMode = localStorage.getItem("darkMode");
-    if (savedMode) {
-      isDarkMode.value = savedMode === "true";
-    }
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
   }
 };
 
-// Typing animation
+/* ---------------- Typing animation ---------------- */
 const typedText = ref("");
-const texts = [
-  "Hi, I'm HeiChan",
+const roleTexts = [
+  "Software Engineer",
   "Cloud & AI Automation",
-  "Full-Stack Engineer",
-  "Data-Driven Problem Solver",
+  "Data-Driven Builder",
+  "Information Engineering @ CUHK",
 ];
-let currentTextIndex = 0;
-let typingIndex = 0;
-const startTypingAnimation = () => {
-  const typeText = () => {
-    const currentText = texts[currentTextIndex];
-    if (typingIndex < currentText.length) {
-      typedText.value += currentText.charAt(typingIndex);
-      typingIndex++;
-      setTimeout(typeText, 90);
+let textIndex = 0;
+let charIndex = 0;
+
+const startTyping = () => {
+  const type = () => {
+    const current = roleTexts[textIndex];
+    if (charIndex < current.length) {
+      typedText.value += current.charAt(charIndex);
+      charIndex++;
+      setTimeout(type, 70);
     } else {
-      setTimeout(eraseText, 2000);
+      setTimeout(erase, 2200);
     }
   };
-  const eraseText = () => {
+  const erase = () => {
     if (typedText.value.length > 0) {
       typedText.value = typedText.value.slice(0, -1);
-      setTimeout(eraseText, 40);
+      setTimeout(erase, 32);
     } else {
-      currentTextIndex = (currentTextIndex + 1) % texts.length;
-      typingIndex = 0;
-      setTimeout(typeText, 400);
+      textIndex = (textIndex + 1) % roleTexts.length;
+      charIndex = 0;
+      setTimeout(type, 400);
     }
   };
-  typeText();
+  type();
 };
 
-// Subtitles
-const subtitles = [
-  "Building cloud automation and AI pipelines that ship.",
-  "From Azure infrastructure to PyTorch audio models.",
-  "Turning requirements into reliable, automated systems.",
-  "Open to graduate roles in SWE, Cloud & AI, and Data.",
+/* ---------------- Content ---------------- */
+const domains = [
+  {
+    title: "Software Engineering",
+    icon: "fa-solid fa-code",
+    description:
+      "Full-stack web and mobile applications — typed APIs, clean data models, and interfaces that hold up in production.",
+    tech: ["Nuxt 3 / Vue", "Laravel", "Kotlin", "Flask / FastAPI"],
+  },
+  {
+    title: "Cloud & AI Automation",
+    icon: "fa-solid fa-cloud",
+    description:
+      "Azure infrastructure as code, secretless CI/CD, enterprise workflow automation, and applied AI pipelines.",
+    tech: ["Azure", "Terraform", "OIDC CI/CD", "ServiceNow"],
+  },
+  {
+    title: "Data & Reporting",
+    icon: "fa-solid fa-chart-column",
+    description:
+      "Schema design, SQL and MongoDB modelling, and Python automation that replaces manual spreadsheet work.",
+    tech: ["SQL", "MongoDB", "Python", "Reporting"],
+  },
+  {
+    title: "Security & Networks",
+    icon: "fa-solid fa-shield-halved",
+    description:
+      "Linux tooling, network reconnaissance, intrusion detection, and applied cryptography fundamentals.",
+    tech: ["Linux", "Nmap", "Suricata", "Cryptography"],
+  },
 ];
-const currentSubtitle = ref(subtitles[0]);
-let currentSubtitleIndex = 0;
-let subtitleInterval = null;
-const changeSubtitle = () => {
-  currentSubtitleIndex = (currentSubtitleIndex + 1) % subtitles.length;
-  currentSubtitle.value = subtitles[currentSubtitleIndex];
-};
 
-// Fun facts (all real, from project work)
-const funFacts = [
-  "I cut a legacy C#/SQL system's runtime from 2m 30s to 1m 20s — a 45% speed-up.",
-  "My AI pipeline uses Demucs for vocal separation and a fine-tuned Wav2Vec2 for lyric transcription.",
-  "I provision Azure infrastructure through Terraform with OIDC-based CI/CD — no long-lived secrets.",
-  "I automated guest-domain whitelisting across SharePoint, Entra ID, and Teams with Copilot Studio.",
-  "I shipped a Nuxt.js corporate site during a summer software internship.",
-  "I run a home lab with Nmap and Suricata to practise network intrusion detection.",
+const techStack = [
+  {
+    name: "Software Engineering",
+    items: [
+      { name: "Nuxt 3 / Vue", icon: "fa-brands fa-vuejs" },
+      { name: "Python", icon: "fa-brands fa-python" },
+      { name: "JavaScript", icon: "fa-brands fa-js" },
+      { name: "Laravel / PHP", icon: "fa-brands fa-laravel" },
+      { name: "Kotlin", icon: "fa-brands fa-android" },
+      { name: "Git", icon: "fa-brands fa-git-alt" },
+      { name: "Docker", icon: "fa-brands fa-docker" },
+    ],
+  },
+  {
+    name: "Cloud & AI",
+    items: [
+      { name: "Microsoft Azure", icon: "fa-brands fa-microsoft" },
+      { name: "Terraform", icon: "fa-solid fa-cubes" },
+      { name: "Azure DevOps", icon: "fa-solid fa-infinity" },
+      { name: "ServiceNow", icon: "fa-solid fa-gears" },
+      { name: "Power Automate", icon: "fa-solid fa-arrows-rotate" },
+      { name: "PyTorch", icon: "fa-solid fa-brain" },
+      { name: "Copilot Studio", icon: "fa-solid fa-robot" },
+      { name: "Entra ID", icon: "fa-solid fa-fingerprint" },
+    ],
+  },
+  {
+    name: "Data",
+    items: [
+      { name: "SQL", icon: "fa-solid fa-database" },
+      { name: "MongoDB", icon: "fa-solid fa-leaf" },
+      { name: "REST APIs", icon: "fa-solid fa-plug" },
+      { name: "Automation", icon: "fa-solid fa-chart-line" },
+      { name: "DSA", icon: "fa-solid fa-sitemap" },
+    ],
+  },
+  {
+    name: "Security",
+    items: [
+      { name: "Linux", icon: "fa-brands fa-linux" },
+      { name: "Nmap", icon: "fa-solid fa-network-wired" },
+      { name: "Suricata", icon: "fa-solid fa-shield-halved" },
+      { name: "Cryptography", icon: "fa-solid fa-lock" },
+    ],
+  },
 ];
-const currentFunFact = ref("");
-const showPopup = ref(false);
-const showFunFact = () => {
-  currentFunFact.value = funFacts[randomIndex(funFacts.length)];
-  showPopup.value = true;
-};
-const hideFunFact = () => {
-  showPopup.value = false;
-};
 
-// Skills
-const skills = ref([
+const workflow = [
   {
-    name: "Nuxt.js / Vue 3",
-    icon: "💚",
-    tagline: "Full-stack web engineering",
+    title: "Discover",
+    icon: "fa-solid fa-magnifying-glass",
     description:
-      "Built and deployed a production corporate website, plus this animated multi-page portfolio with Nuxt 3, Vue 3, and SCSS.",
-    proficiency: 85,
-    experience: "1+ year",
-    level: "Advanced",
+      "Clarify requirements, constraints, and success metrics before touching code — understanding first, keyboard second.",
   },
   {
-    name: "Python",
-    icon: "🐍",
-    tagline: "Automation & APIs",
+    title: "Design",
+    icon: "fa-solid fa-pen-ruler",
     description:
-      "Automation scripts, Flask / FastAPI REST APIs, and data tooling used across AI and reporting projects.",
-    proficiency: 85,
-    experience: "2+ years",
-    level: "Advanced",
+      "Sketch architecture, data models, and interfaces. Choose boring technology where it wins and justify the rest.",
   },
   {
-    name: "Azure & Terraform",
-    icon: "☁️",
-    tagline: "Infrastructure as Code",
+    title: "Build & Test",
+    icon: "fa-solid fa-hammer",
     description:
-      "Provisioned Azure resources as code with OIDC-based CI/CD, least-privilege identities, and Azure Automation runbooks.",
-    proficiency: 80,
-    experience: "Current role",
-    level: "Advanced",
+      "Ship incrementally with unit tests, readable code, and review-friendly commits. No untested moving parts.",
   },
   {
-    name: "ServiceNow & Power Automate",
-    icon: "⚙️",
-    tagline: "Enterprise automation",
+    title: "Automate & Observe",
+    icon: "fa-solid fa-gauge-high",
     description:
-      "Custom tables, Business Rules, Script Includes, Virtual Agent routing, and cross-platform workflow automation.",
-    proficiency: 82,
-    experience: "Current role",
-    level: "Advanced",
+      "CI/CD pipelines, metrics, and logs so quality is measurable after release — not just assumed.",
   },
-  {
-    name: "PyTorch & Wav2Vec2",
-    icon: "🧠",
-    tagline: "Applied AI",
-    description:
-      "Fine-tuned speech recognition models and designed a 3-stage lyric transcription pipeline, tracked with Word Error Rate.",
-    proficiency: 72,
-    experience: "Academic project",
-    level: "Intermediate",
-  },
-  {
-    name: "C# & SQL",
-    icon: "🔷",
-    tagline: "Legacy modernisation",
-    description:
-      "Optimized a legacy C#/SQL SMS system by 45% and rewrote queries to improve notification reliability.",
-    proficiency: 72,
-    experience: "Internship",
-    level: "Intermediate",
-  },
-  {
-    name: "REST API Design",
-    icon: "🔌",
-    tagline: "Backend services",
-    description:
-      "Designed Flask / FastAPI endpoints with asynchronous processing and real-time progress reporting.",
-    proficiency: 82,
-    experience: "2+ years",
-    level: "Advanced",
-  },
-  {
-    name: "SQL & MongoDB",
-    icon: "🗄️",
-    tagline: "Data modelling",
-    description:
-      "Schema design, complex queries, and document modelling for authentication, profiles, and chat history.",
-    proficiency: 80,
-    experience: "2+ years",
-    level: "Advanced",
-  },
-  {
-    name: "Data Structures & Algorithms",
-    icon: "📊",
-    tagline: "CS fundamentals",
-    description:
-      "CUHK Information Engineering coursework: complexity analysis, trees, graphs, and systems programming in C.",
-    proficiency: 85,
-    experience: "3 years",
-    level: "Advanced",
-  },
-]);
+];
 
-const randomIndex = (length) => Math.floor(Math.random() * length);
-
-const selectedSkill = ref(null);
-const skillProgress = ref(0);
-const showSkillDetails = (index) => {
-  selectedSkill.value = skills.value[index];
-  skillProgress.value = 0;
-  setTimeout(() => {
-    skillProgress.value = selectedSkill.value.proficiency;
-  }, 300);
-  if (import.meta.client) {
-    setTimeout(() => {
-      const element = document.querySelector("#skills .card:last-child");
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    }, 100);
-  }
-};
-
-// SVG cover generator (keeps the project grid visual without stock photos)
+/* ---------------- Project covers ---------------- */
 const svgCover = (label, sub, from, to) =>
   `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480" viewBox="0 0 800 480">
@@ -772,96 +587,38 @@ const svgCover = (label, sub, from, to) =>
       <rect width="800" height="480" fill="url(#g)"/>
       <circle cx="690" cy="60" r="170" fill="rgba(255,255,255,0.10)"/>
       <circle cx="90" cy="440" r="130" fill="rgba(255,255,255,0.08)"/>
-      <text x="60" y="250" font-family="Segoe UI, Arial, sans-serif" font-size="58" font-weight="700" fill="#ffffff">${label}</text>
-      <text x="62" y="305" font-family="Segoe UI, Arial, sans-serif" font-size="26" fill="rgba(255,255,255,0.85)">${sub}</text>
+      <path d="M0 380 L200 300 L400 360 L600 280 L800 340 L800 480 L0 480 Z" fill="rgba(0,0,0,0.18)"/>
+      <text x="60" y="240" font-family="Segoe UI, Arial, sans-serif" font-size="58" font-weight="700" fill="#ffffff">${label}</text>
+      <text x="62" y="295" font-family="Segoe UI, Arial, sans-serif" font-size="26" fill="rgba(255,255,255,0.85)">${sub}</text>
     </svg>`
   )}`;
 
-// Projects
+/* ---------------- Projects ---------------- */
 const projects = ref([
   {
     title: "AI Lyric Detection System",
-    period: "Oct – Dec 2025",
+    badge: "AI · Audio",
     category: "ai-cloud",
     description:
-      "End-to-end AI pipeline that extracts lyrics from songs — vocal separation, speech recognition, and a REST API with a live web interface.",
+      "End-to-end pipeline that extracts lyrics from songs — vocal separation, speech recognition, and a REST API with a web interface.",
     highlights: [
-      "Designed a 3-stage pipeline (Demucs → Wav2Vec2 → text) combining two pretrained audio models",
-      "Fine-tuned Wav2Vec2 on 57 song clips and tracked quality with Word Error Rate (WER)",
-      "Built Flask REST endpoints for upload, async processing, real-time progress, and results",
+      "3-stage pipeline: Demucs → Wav2Vec2 → text output",
+      "Fine-tuning script + WER evaluation on real clips",
+      "FastAPI with background jobs, progress, and Gradio UI",
     ],
-    technologies: ["Python", "PyTorch", "Wav2Vec2", "Demucs", "Flask", "Gradio"],
+    technologies: ["PyTorch", "Wav2Vec2", "Demucs", "FastAPI"],
     image: svgCover("AI Lyrics", "Demucs → Wav2Vec2 → Text", "#6d28d9", "#2563eb"),
     link: "https://github.com/ChanHei419/ai-lyric-detection",
   },
   {
-    title: "Campus Navigator (Android)",
-    period: "Oct – Dec 2025",
-    category: "swe",
-    description:
-      "Android app for campus navigation with real-time map services, custom path planning, and a Retrofit-backed API over MongoDB.",
-    highlights: [
-      "Built RESTful backend integration with Retrofit covering auth, profiles, and chat history",
-      "Integrated Google Maps API for real-time location services and custom path planning",
-      "Modelled users, sessions, and messages in MongoDB",
-    ],
-    technologies: ["Kotlin", "MongoDB", "Google Maps API", "Retrofit"],
-    image: svgCover("Campus Navigator", "Kotlin · Maps · MongoDB", "#0f766e", "#0ea5e9"),
-    link: "https://github.com/ChanHei419/campus-navigator",
-  },
-  {
-    title: "Student Management System",
-    period: "Laravel 12",
-    category: "swe",
-    description:
-      "A Laravel 12 MVC application for managing students, teachers, and country records with a clean Blade interface.",
-    highlights: [
-      "Full CRUD with server-side validation, search, and pagination",
-      "Migrations, seeders, factories, and soft deletes across Eloquent models",
-      "Blade + Tailwind CSS 4 front end served through Vite",
-    ],
-    technologies: ["Laravel 12", "PHP 8.2", "MySQL", "Blade", "Tailwind CSS"],
-    image: svgCover("Student Mgmt", "Laravel 12 · Blade · SQL", "#b91c1c", "#f97316"),
-    link: "https://github.com/ChanHei419/studentManagement",
-  },
-  {
-    title: "HeiChan CV Platform",
-    period: "Nuxt 3",
-    category: "swe",
-    description:
-      "This portfolio: a multi-page Nuxt 3 site with dark mode, an animated hero, live GitHub stats, and interactive dashboards.",
-    highlights: [
-      "Nuxt 3 file-based routing, layouts, and component auto-imports",
-      "Live GitHub REST API stats with graceful offline fallbacks",
-      "Custom SCSS animations, project filters, and export / share utilities",
-    ],
-    technologies: ["Nuxt 3", "Vue 3", "Bootstrap 5", "SCSS"],
-    image: svgCover("CV Platform", "Nuxt 3 · Vue 3", "#4338ca", "#7c3aed"),
-    link: "https://github.com/ChanHei419/MyCV",
-  },
-  {
-    title: "Network Intrusion Detection Lab",
-    period: "Mar – Apr 2026",
-    category: "security",
-    description:
-      "Hands-on security lab: network reconnaissance and signature-based intrusion detection on Linux-based networks.",
-    highlights: [
-      "Scanned lab networks with Nmap to map hosts and exposed services",
-      "Configured Suricata IDS rules to detect and log threat indicators",
-    ],
-    technologies: ["Linux", "Nmap", "Suricata"],
-    image: svgCover("Network IDS", "Nmap · Suricata", "#1f2937", "#475569"),
-    link: "https://github.com/ChanHei419/security-lab",
-  },
-  {
     title: "Azure Terraform Lab",
-    period: "Terraform",
+    badge: "Cloud · IaC",
     category: "ai-cloud",
     description:
       "Modular Azure infrastructure as code with secretless OIDC CI/CD and least-privilege managed identities.",
     highlights: [
-      "Reusable Terraform modules with validated inputs and secure defaults",
-      "GitHub Actions to Azure via OIDC federated credentials — no stored secrets",
+      "Reusable Terraform modules with validated inputs",
+      "GitHub Actions → Azure via OIDC — no stored secrets",
       "Managed identity scoped to a single storage account",
     ],
     technologies: ["Terraform", "Azure", "GitHub Actions", "OIDC"],
@@ -870,25 +627,70 @@ const projects = ref([
   },
   {
     title: "ML Model Serving",
-    period: "FastAPI · Docker",
+    badge: "MLOps",
     category: "ai-cloud",
     description:
       "Production-style serving pattern: a trained model artifact behind a tested FastAPI service with health probes and metrics.",
     highlights: [
-      "Training script writes the model artifact as versioned JSON",
+      "Training script produces a versioned JSON model artifact",
       "Prometheus-format metrics with /health and /ready probes",
-      "Dockerized with a non-root user and container healthcheck",
+      "Docker image with non-root user and healthcheck",
     ],
     technologies: ["FastAPI", "Docker", "Prometheus", "Python"],
     image: svgCover("Model Serving", "FastAPI · Docker", "#0f766e", "#14b8a6"),
     link: "https://github.com/ChanHei419/model-serving-demo",
   },
   {
+    title: "Campus Navigator",
+    badge: "Android",
+    category: "swe",
+    description:
+      "Android app with a local Dijkstra route planner over the campus walkway graph and a Retrofit backend contract.",
+    highlights: [
+      "Jetpack Compose UI with ViewModel + StateFlow",
+      "Pure-Kotlin shortest path engine, unit tested",
+      "Offline fallback keeps navigation working without a network",
+    ],
+    technologies: ["Kotlin", "Compose", "Retrofit", "Dijkstra"],
+    image: svgCover("Campus Navigator", "Kotlin · Compose · Maps", "#0f766e", "#0ea5e9"),
+    link: "https://github.com/ChanHei419/campus-navigator",
+  },
+  {
+    title: "Student Management System",
+    badge: "Full-Stack",
+    category: "swe",
+    description:
+      "Laravel 12 MVC application for managing students, teachers, and country records with a clean Blade interface.",
+    highlights: [
+      "Full CRUD with server-side validation, search, and pagination",
+      "Migrations, seeders, factories, and soft deletes",
+      "Blade + Tailwind CSS 4 served through Vite",
+    ],
+    technologies: ["Laravel 12", "PHP 8.2", "MySQL", "Blade"],
+    image: svgCover("Student Mgmt", "Laravel 12 · Blade · SQL", "#b91c1c", "#f97316"),
+    link: "https://github.com/ChanHei419/studentManagement",
+  },
+  {
+    title: "HeiChan CV Platform",
+    badge: "Web",
+    category: "swe",
+    description:
+      "This portfolio: a multi-page Nuxt 3 site with dark-first design, live GitHub stats, and interactive dashboards.",
+    highlights: [
+      "Nuxt 3 routing, layouts, composables, and auto-imports",
+      "Live GitHub REST API stats with offline fallbacks",
+      "Custom SCSS design system with scroll-reveal animations",
+    ],
+    technologies: ["Nuxt 3", "Vue 3", "Bootstrap", "SCSS"],
+    image: svgCover("CV Platform", "Nuxt 3 · Vue 3", "#4338ca", "#7c3aed"),
+    link: "https://github.com/ChanHei419/MyCV",
+  },
+  {
     title: "Data Automation Toolkit",
-    period: "Python",
+    badge: "Data",
     category: "data",
     description:
-      "Dependency-free Python toolkit that cleans CSV data, loads SQLite, and generates CSV/HTML summary reports.",
+      "Dependency-free Python toolkit that cleans CSV data, loads SQLite, and generates CSV / HTML summary reports.",
     highlights: [
       "Normalises and de-duplicates messy CSV exports",
       "SQLite aggregation producing monthly summary reports",
@@ -900,10 +702,10 @@ const projects = ref([
   },
   {
     title: "DSA Practice",
-    period: "CS Fundamentals",
+    badge: "Fundamentals",
     category: "swe",
     description:
-      "From-scratch data structures and algorithms with complexity notes and a full unittest suite.",
+      "From-scratch data structures and algorithms with complexity notes and a full unit test suite.",
     highlights: [
       "Stacks, queues, linked lists, heaps, and union-find",
       "Sorting, binary search, BFS/DFS, Dijkstra, topological sort",
@@ -913,260 +715,173 @@ const projects = ref([
     image: svgCover("DSA Practice", "28 tests · Big-O notes", "#4c1d95", "#8b5cf6"),
     link: "https://github.com/ChanHei419/dsa-practice",
   },
+  {
+    title: "Security Lab",
+    badge: "Security",
+    category: "security",
+    description:
+      "Nmap reconnaissance and Suricata IDS lab write-ups, plus a report generator that turns scan XML into Markdown.",
+    highlights: [
+      "Nmap XML → Markdown report tool (stdlib only)",
+      "Suricata rule writing, alert triage, and tuning notes",
+      "8 unit tests over the parser and renderer",
+    ],
+    technologies: ["Nmap", "Suricata", "Linux", "Python"],
+    image: svgCover("Security Lab", "Nmap · Suricata · IDS", "#1f2937", "#475569"),
+    link: "https://github.com/ChanHei419/security-lab",
+  },
 ]);
 
 const projectFilters = ref([
-  { label: "All", value: "all" },
-  { label: "AI & Cloud", value: "ai-cloud" },
-  { label: "Full-Stack", value: "swe" },
-  { label: "Data", value: "data" },
-  { label: "Security", value: "security" },
+  { label: "All", value: "all", icon: "fa-solid fa-border-all" },
+  { label: "AI & Cloud", value: "ai-cloud", icon: "fa-solid fa-cloud" },
+  { label: "Full-Stack", value: "swe", icon: "fa-solid fa-code" },
+  { label: "Data", value: "data", icon: "fa-solid fa-database" },
+  { label: "Security", value: "security", icon: "fa-solid fa-shield-halved" },
 ]);
 const activeFilter = ref("all");
+
 const filteredProjects = computed(() => {
   if (activeFilter.value === "all") return projects.value;
-  return projects.value.filter(
-    (project) => project.category === activeFilter.value
-  );
+  return projects.value.filter((project) => project.category === activeFilter.value);
 });
-const setActiveFilter = (filter) => {
-  activeFilter.value = filter;
-};
 
-// Live GitHub stats with graceful fallback
-const fetchProjectStats = async () => {
+/* ---------------- Live GitHub stats ---------------- */
+const stats = ref({ repos: 11, projects: projects.value.length });
+
+const fetchStats = async () => {
   try {
-    const response = await fetch(
-      `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100`
-    );
-    if (!response.ok) return;
-    const repos = await response.json();
-    repos.forEach((repo) => {
-      const project = projects.value.find(
-        (item) => item.link === repo.html_url
-      );
-      if (project) {
-        project.stars = repo.stargazers_count;
-        project.language = repo.language;
-        project.updatedAt = new Date(repo.pushed_at).toLocaleDateString(
-          "en-US",
-          { month: "short", year: "numeric" }
-        );
-      }
-    });
+    const [userResponse, reposResponse] = await Promise.all([
+      fetch("https://api.github.com/users/ChanHei419"),
+      fetch("https://api.github.com/users/ChanHei419/repos?per_page=100"),
+    ]);
+    if (userResponse.ok) {
+      const user = await userResponse.json();
+      stats.value.repos = user.public_repos ?? stats.value.repos;
+    }
+    if (reposResponse.ok) {
+      const repos = await reposResponse.json();
+      repos.forEach((repo) => {
+        const project = projects.value.find((item) => item.link === repo.html_url);
+        if (project) {
+          project.stars = repo.stargazers_count;
+          project.language = repo.language;
+          project.updatedAt = new Date(repo.pushed_at).toLocaleDateString("en-US", {
+            month: "short",
+            year: "numeric",
+          });
+        }
+      });
+    }
   } catch (error) {
-    // Offline or rate-limited — cards simply fall back to static info.
+    // Offline or rate limited — static values remain.
   }
 };
 
-// Comments
-const comments = ref([]);
-const commentForm = ref({ name: "", email: "", message: "" });
-const addComment = () => {
-  if (
-    commentForm.value.name &&
-    commentForm.value.email &&
-    commentForm.value.message
-  ) {
-    comments.value.unshift({
-      name: commentForm.value.name,
-      email: commentForm.value.email,
-      message: commentForm.value.message,
-      timestamp: new Date().toLocaleString(),
-    });
-    commentForm.value = { name: "", email: "", message: "" };
-    showSuccessMessage("Comment added successfully!");
-  }
-};
-
-// Contact form
+/* ---------------- Contact ---------------- */
+const EMAIL = "cccheilllun419@gmail.com";
 const contactForm = ref({ name: "", email: "", subject: "", message: "" });
 const isSubmitting = ref(false);
+const showToast = ref(false);
+const toastMessage = ref("");
+
 const handleContactForm = () => {
-  const sender = contactForm.value.name;
+  isSubmitting.value = true;
   if (import.meta.client) {
     const subject = encodeURIComponent(contactForm.value.subject);
     const body = encodeURIComponent(
-      `${contactForm.value.message}\n\n— ${sender} (${contactForm.value.email})`
+      `${contactForm.value.message}\n\n— ${contactForm.value.name} (${contactForm.value.email})`
     );
     window.location.href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
   }
-  isSubmitting.value = true;
   setTimeout(() => {
     isSubmitting.value = false;
     contactForm.value = { name: "", email: "", subject: "", message: "" };
-    showSuccessMessage("Ready to send from your mail app!");
+    toastMessage.value = "Mail app opened with your message";
+    showToast.value = true;
+    setTimeout(() => {
+      showToast.value = false;
+    }, 3000);
   }, 800);
 };
 
-// Toast notification
-const showToast = ref(false);
-const toastMessage = ref("");
-const showSuccessMessage = (message) => {
-  toastMessage.value = message;
-  showToast.value = true;
-  setTimeout(() => {
-    showToast.value = false;
-  }, 3000);
-};
-
-// Scroll to section
-const scrollToSection = (sectionId) => {
-  if (import.meta.client) {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  }
-};
-
-// Ambient particles
-const particles = ref([]);
-const buildParticles = () => {
-  particles.value = Array.from({ length: 26 }, (_, id) => ({
-    id,
-    left: Math.random() * 100,
-    top: Math.random() * 100,
-    size: 2 + Math.random() * 4,
-    duration: 10 + Math.random() * 14,
-    delay: -Math.random() * 24,
-  }));
-};
-
-// Scroll-reveal animations
-const observeReveals = () => {
-  if (!import.meta.client || !("IntersectionObserver" in window)) return;
-  document.documentElement.classList.add("reveal-init");
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.12 }
-  );
-  document
-    .querySelectorAll("[data-reveal]")
-    .forEach((element) => observer.observe(element));
-};
-
-// Lifecycle hooks
 onMounted(() => {
-  checkDarkMode();
-  buildParticles();
-  startTypingAnimation();
-  fetchProjectStats();
-  observeReveals();
-  subtitleInterval = setInterval(() => {
-    changeSubtitle();
-  }, 5000);
-});
-onUnmounted(() => {
-  if (subtitleInterval) {
-    clearInterval(subtitleInterval);
-  }
+  startTyping();
+  fetchStats();
 });
 </script>
 
 <style lang="scss" scoped>
-/* Minimal SCSS for essential customizations */
-.container-fluid {
-  min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-
-  &.bg-dark {
-    background:
-      radial-gradient(1100px 600px at 12% 8%, rgba(124, 58, 237, 0.32), transparent 60%),
-      radial-gradient(900px 520px at 88% 18%, rgba(37, 99, 235, 0.28), transparent 62%),
-      radial-gradient(800px 600px at 50% 100%, rgba(14, 165, 233, 0.18), transparent 65%),
-      linear-gradient(160deg, #070b18 0%, #0d1226 55%, #140f2b 100%);
-  }
+.text-muted-s {
+  color: var(--text-muted);
 }
 
-/* Keep content above ambient particles */
-.container,
-section {
-  position: relative;
-  z-index: 1;
+/* ---------- Hero ---------- */
+.hero {
+  padding-top: 4rem;
 }
 
-/* Ambient floating particles */
-.particles {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 0;
-}
-
-.particle {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(199, 210, 254, 0.45);
-  box-shadow: 0 0 10px rgba(125, 211, 252, 0.45);
-  animation-name: particle-drift;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-@keyframes particle-drift {
-  0% {
-    transform: translateY(0) scale(1);
-    opacity: 0.15;
-  }
-  50% {
-    opacity: 0.85;
-  }
-  100% {
-    transform: translateY(-48px) scale(1.25);
-    opacity: 0.1;
-  }
-}
-
-/* Hero extras */
 .hero-title {
-  background: linear-gradient(92deg, #ffffff 0%, #c7d2fe 45%, #7dd3fc 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  min-height: 4.4rem;
 }
 
-.hero-title .typing-cursor {
-  -webkit-text-fill-color: #7dd3fc;
+.typing-cursor {
+  color: var(--accent-cyan);
+  animation: blink 1s infinite;
 }
 
-.hero-avatar-wrap {
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.hero-lede {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  max-width: 620px;
+  margin-top: 1rem;
+}
+
+/* ---------- Avatar ---------- */
+.avatar-stage {
   position: relative;
   display: inline-block;
+  padding: 30px;
 }
 
-.hero-avatar-glow {
+.avatar-ring {
   position: absolute;
-  inset: -18px;
+  inset: 10px;
   border-radius: 50%;
-  background: conic-gradient(from 0deg, #7c3aed, #2563eb, #06b6d4, #7c3aed);
-  filter: blur(26px);
+  background: conic-gradient(from 0deg, #8b5cf6, #3b82f6, #22d3ee, #8b5cf6);
+  filter: blur(30px);
   opacity: 0.55;
-  animation: glow-spin 12s linear infinite;
-  z-index: 0;
+  animation: ring-spin 12s linear infinite;
 }
 
-.hero-avatar {
-  position: relative;
-  z-index: 1;
-  border: 3px solid rgba(255, 255, 255, 0.18);
-  animation: float-soft 6s ease-in-out infinite;
-}
-
-@keyframes glow-spin {
+@keyframes ring-spin {
   to {
     transform: rotate(360deg);
   }
+}
+
+.avatar-image {
+  position: relative;
+  width: min(280px, 70vw);
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 24px 60px rgba(2, 6, 23, 0.6);
+  animation: float-soft 6s ease-in-out infinite;
 }
 
 @keyframes float-soft {
@@ -1179,240 +894,265 @@ section {
   }
 }
 
-/* Scroll cue */
-.scroll-cue {
-  margin-top: 2rem;
+.tech-orbit {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  color: #ffffff;
+  background: rgba(15, 22, 44, 0.85);
+  border: 1px solid var(--border-soft);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 28px rgba(2, 6, 23, 0.5);
+  animation: float-soft 5s ease-in-out infinite;
 }
 
-.scroll-cue-dot {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.12);
-  animation: cue-bounce 1.8s ease-in-out infinite;
+.orbit-1 {
+  top: 4%;
+  left: 6%;
+  animation-delay: -1s;
 }
 
-@keyframes cue-bounce {
-  0%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.9;
-  }
-  50% {
-    transform: translateY(12px);
-    opacity: 0.4;
-  }
+.orbit-2 {
+  top: 0%;
+  right: 14%;
+  animation-delay: -2.4s;
 }
 
-/* Glass panels in dark mode */
-.bg-dark {
-  .card {
-    background: rgba(17, 24, 43, 0.62) !important;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(148, 163, 184, 0.18);
-    color: #e2e8f0;
-  }
-
-  .card:hover {
-    border-color: rgba(125, 211, 252, 0.45);
-    box-shadow: 0 0 0 1px rgba(125, 211, 252, 0.18),
-      0 18px 40px rgba(2, 6, 23, 0.55) !important;
-  }
+.orbit-3 {
+  top: 42%;
+  left: -4%;
+  animation-delay: -0.6s;
 }
 
-/* Neon buttons */
-.btn-primary {
-  background: linear-gradient(120deg, #6d28d9, #2563eb);
-  border: none;
-  box-shadow: 0 6px 20px rgba(76, 29, 149, 0.35);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+.orbit-4 {
+  top: 40%;
+  right: -6%;
+  animation-delay: -3.2s;
 }
 
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(56, 189, 248, 0.35);
+.orbit-5 {
+  bottom: 4%;
+  left: 12%;
+  animation-delay: -1.8s;
 }
 
-/* Scroll-reveal */
-.reveal-init [data-reveal] {
-  opacity: 0;
-  transform: translateY(26px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+.orbit-6 {
+  bottom: 0%;
+  right: 16%;
+  animation-delay: -4s;
 }
 
-.reveal-init [data-reveal].is-visible {
-  opacity: 1;
-  transform: none;
+/* ---------- Tech stack ---------- */
+.stack-group + .stack-group {
+  margin-top: 1.25rem;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .particle,
-  .hero-avatar,
-  .hero-avatar-glow,
-  .scroll-cue-dot {
-    animation: none !important;
-  }
-
-  .reveal-init [data-reveal] {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-}
-
-/* Hero */
-.hero-kicker {
-  letter-spacing: 0.08em;
+.stack-group-title {
   text-transform: uppercase;
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  margin-bottom: 0.6rem;
 }
 
-/* Navbar */
-.navbar {
-  background: linear-gradient(
-    45deg,
-    rgba(93, 92, 222, 0.95),
-    rgba(0, 221, 235, 0.95)
-  ) !important;
+.chip-mini {
+  font-size: 0.72rem;
+  padding: 0.22rem 0.6rem;
 }
-.bg-dark .navbar {
-  background: linear-gradient(
-    45deg,
-    rgba(35, 37, 38, 0.95),
-    rgba(65, 67, 69, 0.95)
-  ) !important;
+
+/* ---------- Projects ---------- */
+.filter-btn {
+  border-radius: 999px;
+  font-size: 0.82rem;
 }
-.nav-link:hover::after {
+
+.project-card {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-cover-wrap {
+  position: relative;
+}
+
+.project-cover {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  display: block;
+}
+
+.project-category {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: rgba(2, 6, 23, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+}
+
+.project-points {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.project-points li {
+  position: relative;
+  padding-left: 1.1rem;
+  margin-bottom: 0.35rem;
+}
+
+.project-points li::before {
   content: "";
   position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 100%;
-  height: 2px;
-  background: #e22a2a;
-  transform: translateX(-50%);
+  left: 0;
+  top: 0.45rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gradient-main);
 }
 
-/* Typing cursor */
-.typing-cursor {
-  animation: blink 1s infinite;
-}
-@keyframes blink {
-  0%,
-  50% {
-    opacity: 1;
-  }
-  51%,
-  100% {
-    opacity: 0;
-  }
+/* ---------- Process ---------- */
+.process-card {
+  position: relative;
 }
 
-/* Card hover effect */
-.card {
-  transition: all 0.2s ease;
-}
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
+.process-index {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: rgba(148, 163, 184, 0.35);
 }
 
-/* Project highlights */
-.project-highlights li {
+/* ---------- Contact ---------- */
+.contact-tile i {
+  font-size: 1.2rem;
+  color: var(--accent-cyan);
+  margin-bottom: 0.6rem;
+  display: inline-block;
+}
+
+.contact-tile h6 {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  color: var(--text-muted);
   margin-bottom: 0.35rem;
-  opacity: 0.9;
 }
 
-/* Progress bar */
-.progress {
-  height: 10px;
-  border-radius: 10px;
-}
-.progress-bar {
-  transition: width 2s ease-in-out;
+.contact-tile p {
+  margin-bottom: 0;
+  font-weight: 600;
+  font-size: 0.92rem;
+  word-break: break-word;
 }
 
-/* Transitions */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
+.contact-tile a {
+  color: var(--text-primary);
+  text-decoration: none;
 }
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+
+.contact-tile a:hover {
+  color: var(--accent-cyan);
 }
-.modal-enter-active,
-.modal-leave-active {
-  transition: opacity 0.3s ease;
+
+/* ---------- Form ---------- */
+.form-control {
+  background: rgba(2, 6, 23, 0.4);
+  border: 1px solid var(--border-soft);
+  color: var(--text-primary);
+  border-radius: 12px;
+  padding: 0.7rem 1rem;
 }
-.modal-enter-from,
-.modal-leave-to {
-  opacity: 0;
+
+.form-control:focus {
+  background: rgba(2, 6, 23, 0.55);
+  border-color: var(--accent-violet);
+  color: var(--text-primary);
+  box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.2);
 }
+
+.form-control::placeholder {
+  color: rgba(148, 163, 184, 0.7);
+}
+
+html[data-theme="light"] .form-control {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+/* ---------- Toast ---------- */
+.toast-notice {
+  position: fixed;
+  top: 92px;
+  right: 20px;
+  z-index: 1060;
+  padding: 0.85rem 1.2rem;
+  border-radius: 12px;
+  background: linear-gradient(120deg, #059669, #10b981);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 16px 36px rgba(2, 6, 23, 0.5);
+}
+
 .toast-enter-active,
 .toast-leave-active {
   transition: all 0.3s ease;
 }
+
 .toast-enter-from,
 .toast-leave-to {
   opacity: 0;
-  transform: translateX(100%);
+  transform: translateX(60px);
 }
 
-/* White text for headers */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-weight: bold;
-}
-.navbar-brand {
-  font-weight: bold;
-}
-</style>
-
-<style>
-/* global css */
-.darkmode {
-  background-color: #121212;
-  color: #ffffff;
-}
-
+/* ---------- Theme toggle ---------- */
 .theme-toggle {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-  background-color: var(--toggle-bg, #4a90e2);
-  color: var(--toggle-color, #fff);
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  z-index: 1000; /* Ensure it stays above other content */
+  right: 22px;
+  bottom: 24px;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-strong);
+  color: var(--text-primary);
+  backdrop-filter: blur(12px);
+  z-index: 1040;
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .theme-toggle:hover {
-  background-color: var(--toggle-hover-bg, #357abd);
-  transform: scale(1.05);
+  transform: translateY(-3px);
+  border-color: var(--border-bright);
 }
 
-.theme-toggle:focus {
-  outline: 2px solid var(--toggle-focus, #2a5a94);
-  outline-offset: 2px;
-}
+@media (max-width: 991px) {
+  .hero {
+    padding-top: 2.5rem;
+  }
 
-/* Optional: Adjust for dark mode */
-[data-theme="dark"] .theme-toggle {
-  --toggle-bg: #6b7280;
-  --toggle-hover-bg: #4b5563;
-  --toggle-focus: #9ca3af;
+  .avatar-stage {
+    margin-top: 1rem;
+  }
+
+  .orbit-3,
+  .orbit-4 {
+    display: none;
+  }
 }
 </style>

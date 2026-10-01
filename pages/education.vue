@@ -1,178 +1,356 @@
 <template>
-  <div :class="['container-fluid', { 'bg-dark': isDarkMode, 'bg-light': !isDarkMode }]">
-    <!-- Header -->
-    <header class="bg-primary bg-gradient text-white py-3 mb-4 shadow-sm sticky-top">
-      <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
-        <h1 class="h4 mb-0 fw-bold"><i class="fas fa-graduation-cap me-2"></i>Education</h1>
-        <div class="d-flex gap-2">
-          <button @click="toggleTheme" class="btn btn-light btn-sm">
-            <span>{{ isDarkMode ? '☀️' : '🌙' }}</span> {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
-          </button>
-          <NuxtLink to="/" class="btn btn-light btn-sm"><i class="fas fa-home me-1"></i>Back to Home</NuxtLink>
+  <main class="page">
+    <button class="theme-toggle" @click="toggleTheme" aria-label="Toggle theme">
+      <i :class="isDarkMode ? 'fa-solid fa-sun' : 'fa-solid fa-moon'"></i>
+    </button>
+
+    <!-- Hero -->
+    <section class="section-shell">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-9 text-center" data-reveal>
+            <span class="section-kicker justify-content-center d-inline-flex">
+              <i class="fa-solid fa-graduation-cap"></i> Education
+            </span>
+            <h1 class="page-title gradient-text">Academic foundation</h1>
+            <p class="section-lede mx-auto">
+              A degree in Information Engineering gave me the fundamentals —
+              algorithms, systems, networks, and security. Everything else I
+              built on top of that foundation, one project at a time.
+            </p>
+          </div>
         </div>
       </div>
-    </header>
-    <button @click="toggleTheme" class="theme-toggle btn btn-light btn-sm mt-50">
-      {{ isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode" }}</button>
+    </section>
 
-    <!-- Main Content -->
-    <main class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8 col-xl-7">
-          <!-- Timeline -->
-          <section class="position-relative ps-4">
-            <div v-for="(entry, index) in education" :key="index" class="mb-4 position-relative">
-              <div class="position-absolute bg-primary rounded-circle" style="width: 16px; height: 16px; left: -8px; top: 20px;"></div>
-              <div :class="['card', isDarkMode ? 'bg-dark text-light' : 'bg-white text-dark']">
-                <div class="card-header bg-primary bg-gradient text-white d-flex align-items-center" @click="toggleDetails(index)">
-                  <i :class="['fas fa-chevron-down me-3', { 'rotate-180': expandedCards[index] }]"></i>
-                  <div>
-                    <h4 class="card-title h5 mb-0 fw-bold">{{ entry.degree }}</h4>
-                    <p class="card-text text-white-75 mb-0">
-                      <i class="fas fa-university me-2"></i>{{ entry.school }} • {{ entry.years }}
-                    </p>
+    <!-- Degree -->
+    <section class="section-shell pt-0">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-9" data-reveal>
+            <div class="glass-card p-4 p-lg-5">
+              <div class="d-flex flex-wrap align-items-start gap-4">
+                <span class="icon-badge degree-badge">
+                  <i class="fa-solid fa-university"></i>
+                </span>
+                <div class="flex-grow-1">
+                  <h2 class="h4 fw-bold mb-1">
+                    Bachelor of Engineering in Information Engineering
+                  </h2>
+                  <p class="text-muted-s mb-4">
+                    The Chinese University of Hong Kong
+                  </p>
+
+                  <h3 class="h6 fw-bold mb-2">Core Focus</h3>
+                  <div class="d-flex flex-wrap gap-1 mb-4">
+                    <span class="chip">
+                      <i class="fa-solid fa-sitemap"></i> Software Systems
+                    </span>
+                    <span class="chip">
+                      <i class="fa-solid fa-network-wired"></i> Networking
+                    </span>
+                    <span class="chip">
+                      <i class="fa-solid fa-shield-halved"></i> Security
+                    </span>
                   </div>
-                </div>
-                <div class="collapse" :class="{ show: expandedCards[index] }">
-                  <div class="card-body">
-                    <div class="d-flex mb-3">
-                      <span class="fw-bold me-2">Focus:</span>
-                      <span class="text-primary fw-bold">{{ entry.focus }}</span>
+
+                  <h3 class="h6 fw-bold mb-2">Relevant Coursework</h3>
+                  <div class="row g-3 mb-4">
+                    <div
+                      v-for="course in coursework"
+                      :key="course.name"
+                      class="col-sm-6"
+                    >
+                      <div class="course-row">
+                        <i :class="course.icon"></i>
+                        <div>
+                          <div class="course-name">{{ course.name }}</div>
+                          <div class="text-muted-s small">{{ course.detail }}</div>
+                        </div>
+                      </div>
                     </div>
-                    <h5 class="h6 fw-bold">Relevant Coursework</h5>
-                    <div class="d-flex flex-wrap gap-1 mb-3">
-                      <span
-                        v-for="course in entry.coursework"
-                        :key="course"
-                        class="badge bg-primary"
-                      >
-                        {{ course }}
-                      </span>
-                    </div>
-                    <h5 class="h6 fw-bold">Selected Coursework Highlights</h5>
-                    <ul>
-                      <li v-for="highlight in entry.highlights" :key="highlight">
-                        {{ highlight }}
-                      </li>
-                    </ul>
                   </div>
+
+                  <h3 class="h6 fw-bold mb-2">What It Gave Me</h3>
+                  <ul class="project-points small mb-0">
+                    <li
+                      v-for="highlight in degreeHighlights"
+                      :key="highlight"
+                    >
+                      {{ highlight }}
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
-          </section>
+          </div>
         </div>
       </div>
-    </main>
-  </div>
+    </section>
+
+    <!-- Beyond the classroom -->
+    <section class="section-shell">
+      <div class="container">
+        <div class="text-center mb-5" data-reveal>
+          <span class="section-kicker justify-content-center d-inline-flex">
+            <i class="fa-solid fa-lightbulb"></i> Beyond the Classroom
+          </span>
+          <h2 class="section-title gradient-text">Self-directed learning</h2>
+          <p class="section-lede mx-auto">
+            The courses taught fundamentals; industry and personal projects
+            taught the modern stack.
+          </p>
+        </div>
+
+        <div class="row g-4">
+          <div
+            v-for="track in learningTracks"
+            :key="track.title"
+            class="col-md-6 col-xl-3"
+            data-reveal
+          >
+            <div class="glass-card h-100 p-4">
+              <span class="icon-badge subtle mb-3">
+                <i :class="track.icon"></i>
+              </span>
+              <h3 class="h6 fw-bold mb-2">{{ track.title }}</h3>
+              <p class="text-muted-s small mb-3">{{ track.description }}</p>
+              <div class="d-flex flex-wrap gap-1">
+                <span v-for="item in track.items" :key="item" class="chip chip-mini">
+                  {{ item }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Coursework projects -->
+    <section class="section-shell">
+      <div class="container">
+        <div class="text-center mb-5" data-reveal>
+          <span class="section-kicker justify-content-center d-inline-flex">
+            <i class="fa-solid fa-flask"></i> Applied Work
+          </span>
+          <h2 class="section-title gradient-text">
+            Coursework that became projects
+          </h2>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+          <div
+            v-for="project in courseworkProjects"
+            :key="project.title"
+            class="col-md-6 col-lg-4"
+            data-reveal
+          >
+            <a
+              :href="project.link"
+              target="_blank"
+              rel="noopener"
+              class="glass-card h-100 p-4 d-block text-decoration-none project-link"
+            >
+              <span class="icon-badge mb-3">
+                <i :class="project.icon"></i>
+              </span>
+              <h3 class="h6 fw-bold mb-2">{{ project.title }}</h3>
+              <p class="text-muted-s small mb-3">{{ project.description }}</p>
+              <span class="project-link-cta">
+                View repository <i class="fa-solid fa-arrow-right ms-1"></i>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+const { isDarkMode, toggleTheme } = useDarkMode();
+useReveal();
 
-// Theme management
-const isDarkMode = ref(false);
-
-// State
-const expandedCards = ref([true]);
-
-// Education data
-const education = ref([
+const coursework = [
   {
-    degree: "Bachelor of Engineering in Information Engineering",
-    school: "The Chinese University of Hong Kong",
-    years: "Aug 2023 – Present",
-    focus: "Software Systems · Networking · Security",
-    coursework: [
-      "Data Structures",
-      "Systems Programming",
-      "Computer Networks",
-      "Cryptography",
-    ],
-    highlights: [
-      "Built an applied AI lyric transcription pipeline (Demucs + fine-tuned Wav2Vec2) and a Kotlin/MongoDB campus navigation app as coursework projects",
-      "Completed a hands-on network intrusion detection lab using Nmap and Suricata",
-      "Applied data structures and systems programming in C across core courses",
-    ],
+    name: "Data Structures",
+    detail: "Complexity analysis, trees, graphs, and algorithm design in C",
+    icon: "fa-solid fa-sitemap",
   },
-]);
+  {
+    name: "Systems Programming",
+    detail: "Memory management, pointers, and low-level systems work in C",
+    icon: "fa-solid fa-microchip",
+  },
+  {
+    name: "Computer Networks",
+    detail: "Protocol stacks, routing, and network programming",
+    icon: "fa-solid fa-network-wired",
+  },
+  {
+    name: "Cryptography",
+    detail: "Encryption, hashing, and secure protocol fundamentals",
+    icon: "fa-solid fa-lock",
+  },
+];
 
-// Methods
-const toggleTheme = () => {
-  isDarkMode.value = !isDarkMode.value;
-};
+const degreeHighlights = [
+  "Merged theory with practice: every course concept ended up in a shipped project, from Dijkstra in the campus navigator to CTC models in the lyric pipeline",
+  "Built and documented applied AI, Android, and security projects alongside coursework",
+  "Practised version control, code review, and testing across C, C#, Kotlin, and Python codebases",
+];
 
-const toggleDetails = (index) => {
-  expandedCards.value[index] = !expandedCards.value[index];
-};
+const learningTracks = [
+  {
+    title: "Cloud & Infrastructure",
+    icon: "fa-solid fa-cloud",
+    description:
+      "Learned infrastructure as code on the job — now I provision Azure resources with Terraform instead of clicking portals.",
+    items: ["Azure", "Terraform", "OIDC CI/CD"],
+  },
+  {
+    title: "Applied AI",
+    icon: "fa-solid fa-brain",
+    description:
+      "Moved from course theory to training and evaluating models on real audio datasets with PyTorch.",
+    items: ["PyTorch", "Wav2Vec2", "Demucs"],
+  },
+  {
+    title: "Enterprise Automation",
+    icon: "fa-solid fa-gears",
+    description:
+      "Automated workflows that previously consumed hours of manual effort, end to end.",
+    items: ["ServiceNow", "Power Automate", "Copilot Studio"],
+  },
+  {
+    title: "Mobile Development",
+    icon: "fa-brands fa-android",
+    description:
+      "Built an Android app with Compose, state management, and a REST backend contract.",
+    items: ["Kotlin", "Compose", "Retrofit"],
+  },
+];
 
-// Theme detection
-onMounted(() => {
-  if (import.meta.client && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    isDarkMode.value = true;
-  }
-});
+const courseworkProjects = [
+  {
+    title: "AI Lyric Detection System",
+    description:
+      "Vocal separation with Demucs and speech recognition with a fine-tuned Wav2Vec2, served through an API.",
+    icon: "fa-solid fa-music",
+    link: "https://github.com/ChanHei419/ai-lyric-detection",
+  },
+  {
+    title: "Campus Navigator",
+    description:
+      "Android app with a local Dijkstra route planner over the campus walkway graph.",
+    icon: "fa-solid fa-map-location-dot",
+    link: "https://github.com/ChanHei419/campus-navigator",
+  },
+  {
+    title: "Network Intrusion Detection Lab",
+    description:
+      "Nmap reconnaissance and Suricata IDS rules with a scan-report generator.",
+    icon: "fa-solid fa-shield-halved",
+    link: "https://github.com/ChanHei419/security-lab",
+  },
+];
 </script>
 
 <style lang="scss" scoped>
-/* Minimal SCSS for essential customizations */
-.container-fluid {
-  min-height: 100vh;
+.text-muted-s {
+  color: var(--text-muted);
 }
 
-/* Timeline line */
-section.position-relative::before {
-  content: '';
+.page {
+  position: relative;
+  z-index: 1;
+}
+
+.page-title {
+  font-size: clamp(1.9rem, 4vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+.degree-badge {
+  width: 64px;
+  height: 64px;
+  font-size: 1.6rem;
+}
+
+.course-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid var(--border-soft);
+}
+
+.course-row i {
+  color: var(--accent-cyan);
+  font-size: 1.05rem;
+  margin-top: 0.15rem;
+}
+
+.course-name {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.project-points {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.project-points li {
+  position: relative;
+  padding-left: 1.1rem;
+  margin-bottom: 0.45rem;
+}
+
+.project-points li::before {
+  content: "";
   position: absolute;
-  left: 15px;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: linear-gradient(to bottom, #0d6efd, #6610f2);
-  border-radius: 2px;
+  left: 0;
+  top: 0.45rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gradient-main);
 }
 
-/* Rotate expand icon */
-.rotate-180 {
-  transform: rotate(180deg);
-  transition: transform 0.3s ease;
+.project-link {
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* Collapse transition */
-.collapse {
-  transition: all 0.4s ease;
+.project-link-cta {
+  color: var(--accent-cyan);
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
-/* White text for headers */
-.card-header .card-title,
-.card-header .card-text {
-  color: #ffffff !important;
-  font-weight: bold;
+.theme-toggle {
+  position: fixed;
+  right: 22px;
+  bottom: 24px;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  border: 1px solid var(--border-soft);
+  background: var(--surface-strong);
+  color: var(--text-primary);
+  backdrop-filter: blur(12px);
+  z-index: 1040;
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-/* Default light mode */
-:root, [data-theme="light"] {
-  --background: #fff;
-  --text-color: #1a202c;
-  --toggle-bg: #4a90e2;
-  --toggle-hover-bg: #357abd;
-  --toggle-focus: #2a5a94;
-  --toggle-color: #fff;
-}
-
-/* Dark mode */
-[data-theme="dark"] {
-  --background: #1a202c;
-  --text-color: #e2e8f0;
-  --toggle-bg: #6b7280;
-  --toggle-hover-bg: #4b5563;
-  --toggle-focus: #9ca3af;
-  --toggle-color: #fff;
-}
-
-/* Apply theme variables */
-body {
-  background-color: var(--background);
-  color: var(--text-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
+.theme-toggle:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-bright);
 }
 </style>

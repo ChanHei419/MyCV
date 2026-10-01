@@ -782,7 +782,7 @@ const projects = ref([
   {
     title: "AI Lyric Detection System",
     period: "Oct – Dec 2025",
-    category: "ai",
+    category: "ai-cloud",
     description:
       "End-to-end AI pipeline that extracts lyrics from songs — vocal separation, speech recognition, and a REST API with a live web interface.",
     highlights: [
@@ -792,7 +792,7 @@ const projects = ref([
     ],
     technologies: ["Python", "PyTorch", "Wav2Vec2", "Demucs", "Flask", "Gradio"],
     image: svgCover("AI Lyrics", "Demucs → Wav2Vec2 → Text", "#6d28d9", "#2563eb"),
-    link: "",
+    link: "https://github.com/ChanHei419/ai-lyric-detection",
   },
   {
     title: "Campus Navigator (Android)",
@@ -807,7 +807,7 @@ const projects = ref([
     ],
     technologies: ["Kotlin", "MongoDB", "Google Maps API", "Retrofit"],
     image: svgCover("Campus Navigator", "Kotlin · Maps · MongoDB", "#0f766e", "#0ea5e9"),
-    link: "",
+    link: "https://github.com/ChanHei419/campus-navigator",
   },
   {
     title: "Student Management System",
@@ -851,14 +851,75 @@ const projects = ref([
     ],
     technologies: ["Linux", "Nmap", "Suricata"],
     image: svgCover("Network IDS", "Nmap · Suricata", "#1f2937", "#475569"),
-    link: "",
+    link: "https://github.com/ChanHei419/security-lab",
+  },
+  {
+    title: "Azure Terraform Lab",
+    period: "Terraform",
+    category: "ai-cloud",
+    description:
+      "Modular Azure infrastructure as code with secretless OIDC CI/CD and least-privilege managed identities.",
+    highlights: [
+      "Reusable Terraform modules with validated inputs and secure defaults",
+      "GitHub Actions to Azure via OIDC federated credentials — no stored secrets",
+      "Managed identity scoped to a single storage account",
+    ],
+    technologies: ["Terraform", "Azure", "GitHub Actions", "OIDC"],
+    image: svgCover("Azure Lab", "Terraform · OIDC CI/CD", "#0369a1", "#22d3ee"),
+    link: "https://github.com/ChanHei419/azure-terraform-lab",
+  },
+  {
+    title: "ML Model Serving",
+    period: "FastAPI · Docker",
+    category: "ai-cloud",
+    description:
+      "Production-style serving pattern: a trained model artifact behind a tested FastAPI service with health probes and metrics.",
+    highlights: [
+      "Training script writes the model artifact as versioned JSON",
+      "Prometheus-format metrics with /health and /ready probes",
+      "Dockerized with a non-root user and container healthcheck",
+    ],
+    technologies: ["FastAPI", "Docker", "Prometheus", "Python"],
+    image: svgCover("Model Serving", "FastAPI · Docker", "#0f766e", "#14b8a6"),
+    link: "https://github.com/ChanHei419/model-serving-demo",
+  },
+  {
+    title: "Data Automation Toolkit",
+    period: "Python",
+    category: "data",
+    description:
+      "Dependency-free Python toolkit that cleans CSV data, loads SQLite, and generates CSV/HTML summary reports.",
+    highlights: [
+      "Normalises and de-duplicates messy CSV exports",
+      "SQLite aggregation producing monthly summary reports",
+      "7 unit tests and GitHub Actions CI",
+    ],
+    technologies: ["Python", "SQLite", "CLI", "unittest"],
+    image: svgCover("Data Toolkit", "CSV → SQLite → Reports", "#7c2d12", "#f59e0b"),
+    link: "https://github.com/ChanHei419/data-automation-toolkit",
+  },
+  {
+    title: "DSA Practice",
+    period: "CS Fundamentals",
+    category: "swe",
+    description:
+      "From-scratch data structures and algorithms with complexity notes and a full unittest suite.",
+    highlights: [
+      "Stacks, queues, linked lists, heaps, and union-find",
+      "Sorting, binary search, BFS/DFS, Dijkstra, topological sort",
+      "28 unit tests running in CI on Python 3.10 and 3.12",
+    ],
+    technologies: ["Python", "Algorithms", "Data Structures"],
+    image: svgCover("DSA Practice", "28 tests · Big-O notes", "#4c1d95", "#8b5cf6"),
+    link: "https://github.com/ChanHei419/dsa-practice",
   },
 ]);
 
 const projectFilters = ref([
   { label: "All", value: "all" },
-  { label: "AI & Cloud", value: "ai" },
+  { label: "AI & Cloud", value: "ai-cloud" },
   { label: "Full-Stack", value: "swe" },
+  { label: "Data", value: "data" },
   { label: "Security", value: "security" },
 ]);
 const activeFilter = ref("all");
